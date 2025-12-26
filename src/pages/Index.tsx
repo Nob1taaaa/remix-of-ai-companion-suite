@@ -54,7 +54,7 @@ const Index = () => {
               <span className="pill-soft inline-flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
                 <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-xs">
-                  NLP • JSON &amp; TOON • Agents
+                  Small lab for real AI projects
                 </span>
               </span>
 
