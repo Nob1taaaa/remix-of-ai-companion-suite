@@ -6,6 +6,9 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_MESSAGE_LENGTH = 10000; // 10K chars per message
+const MAX_MESSAGES = 50; // Max conversation history
+
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
@@ -59,6 +62,24 @@ serve(async (req) => {
         JSON.stringify({ error: 'Messages array is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Input validation: limit number of messages
+    if (messages.length > MAX_MESSAGES) {
+      return new Response(
+        JSON.stringify({ error: `Too many messages. Maximum ${MAX_MESSAGES} messages allowed.` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Input validation: limit message content length
+    for (const msg of messages) {
+      if (typeof msg.content === 'string' && msg.content.length > MAX_MESSAGE_LENGTH) {
+        return new Response(
+          JSON.stringify({ error: `Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters per message.` }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');

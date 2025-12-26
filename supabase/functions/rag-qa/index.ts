@@ -6,6 +6,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const MAX_DOCUMENT_LENGTH = 100000; // 100K chars for documents
+const MAX_QUESTION_LENGTH = 2000; // 2K chars for questions
+
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
@@ -57,6 +60,22 @@ serve(async (req) => {
     if (!question || (!documentText && !image)) {
       return new Response(
         JSON.stringify({ error: "Question and at least one document (text, PDF, or image) are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    // Input validation: limit question length
+    if (question.length > MAX_QUESTION_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Question too long. Maximum ${MAX_QUESTION_LENGTH} characters allowed.` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    // Input validation: limit document length
+    if (documentText && documentText.length > MAX_DOCUMENT_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Document too long. Maximum ${MAX_DOCUMENT_LENGTH} characters allowed.` }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }

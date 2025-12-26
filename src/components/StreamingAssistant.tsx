@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -17,6 +19,7 @@ export const StreamingAssistant = () => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -29,26 +32,47 @@ export const StreamingAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to use the chat assistant",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     setLoading(true);
 
     try {
+      // Get the current user's session token
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.access_token) {
+        throw new Error('No active session');
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stream-chat`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+            'Authorization': `Bearer ${session.access_token}`
           },
           body: JSON.stringify({ messages: [...messages, userMessage] })
         }
       );
 
+      if (response.status === 401) {
+        throw new Error('Session expired. Please sign in again.');
+      }
+
       if (!response.ok || !response.body) {
-        throw new Error('Failed to start stream');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to start stream');
       }
 
       const reader = response.body.getReader();
@@ -105,6 +129,26 @@ export const StreamingAssistant = () => {
       setMessages(prev => prev.slice(0, -1)); // Remove empty assistant message
     }
   };
+
+  // Show login prompt if user is not authenticated
+  if (!user) {
+    return (
+      <div className="flex h-[500px] flex-col items-center justify-center space-y-4">
+        <Card className="flex flex-col items-center justify-center p-8 text-center border-2 border-primary/20">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
+            <Lock className="h-8 w-8 text-primary" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            Please sign in to use the streaming chat assistant
+          </p>
+          <Button asChild>
+            <Link to="/auth">Sign In</Link>
+          </Button>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[500px] flex-col space-y-4">
