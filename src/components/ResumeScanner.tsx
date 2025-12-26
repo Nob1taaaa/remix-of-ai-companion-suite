@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Sparkles, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ScanResult {
   score: number;
@@ -19,6 +20,7 @@ export const ResumeScanner = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleScan = async () => {
     if (!resumeText.trim() || !jobDescription.trim()) {
@@ -46,15 +48,18 @@ export const ResumeScanner = () => {
         description: `Match score: ${data.score}/100`,
       });
 
-      // Save to history
-      await supabase.from('resume_scan_history').insert({
-        resume_text: resumeText,
-        job_description: jobDescription,
-        match_score: data.score,
-        matched_skills: data.matchedSkills,
-        missing_skills: data.missingSkills,
-        analysis: data
-      });
+      // Save to history for logged-in users
+      if (user) {
+        await supabase.from("resume_scan_history").insert({
+          resume_text: resumeText,
+          job_description: jobDescription,
+          match_score: data.score,
+          matched_skills: data.matchedSkills,
+          missing_skills: data.missingSkills,
+          analysis: data,
+          user_id: user.id,
+        });
+      }
     } catch (error: any) {
       console.error('Scan error:', error);
       toast({

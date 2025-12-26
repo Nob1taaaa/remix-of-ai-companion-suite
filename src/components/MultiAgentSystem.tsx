@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Bot, Loader2, Sparkles, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Agent {
   name: string;
@@ -21,6 +22,7 @@ export const MultiAgentSystem = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<MultiAgentResult | null>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleRun = async () => {
     if (!task.trim()) {
@@ -47,15 +49,18 @@ export const MultiAgentSystem = () => {
         description: "All 3 agents have finished their work",
       });
 
-      // Save to history
-      await supabase.from('agent_task_history').insert({
-        task,
-        planner_output: data?.planner,
-        researcher_output: data?.researcher,
-        writer_output: data?.writer,
-        final_response: data?.finalResponse,
-        raw_result: data
-      });
+      // Save to history for logged-in users
+      if (user) {
+        await supabase.from("agent_task_history").insert({
+          task,
+          planner_output: data?.planner,
+          researcher_output: data?.researcher,
+          writer_output: data?.writer,
+          final_response: data?.finalResponse,
+          raw_result: data,
+          user_id: user.id,
+        });
+      }
     } catch (error: any) {
       console.error('Multi-agent error:', error);
       toast({
