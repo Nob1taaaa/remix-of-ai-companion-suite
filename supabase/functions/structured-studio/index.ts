@@ -13,12 +13,20 @@ serve(async (req) => {
   try {
     const { text, fields, tones } = await req.json();
 
-    if (!text || !Array.isArray(fields) || fields.length === 0 || !Array.isArray(tones) || tones.length === 0) {
+    if (!text) {
       return new Response(
-        JSON.stringify({ error: "Text, fields, and tones are required" }),
+        JSON.stringify({ error: "Text is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
+
+    const effectiveFields = Array.isArray(fields) && fields.length > 0
+      ? fields
+      : ["name", "email", "role", "company", "skills", "location", "experience", "summary"];
+
+    const effectiveTones = Array.isArray(tones) && tones.length > 0
+      ? tones
+      : ["formal", "casual", "recruiter", "friendly"];
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -44,7 +52,7 @@ serve(async (req) => {
           { role: "system", content: systemPrompt },
           {
             role: "user",
-            content: `FIELDS: ${fields.join(", ")}\nTONES: ${tones.join(", ")}\n\nTEXT:\n${text}`,
+            content: `FIELDS: ${effectiveFields.join(", ")}\nTONES: ${effectiveTones.join(", ")}\n\nTEXT:\n${text}`,
           },
         ],
         tools: [

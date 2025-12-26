@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Braces, Wand2, Sparkles, Loader2 } from "lucide-react";
@@ -12,16 +11,13 @@ interface StructuredResult {
   rewrites: Record<string, string>;
 }
 
-const DEFAULT_FIELDS = "name, email, role, company, skills";
-
+const DEFAULT_FIELDS = ["name", "email", "role", "company", "skills", "location"];
 const DEFAULT_TONES = ["formal", "casual", "recruiter", "friendly"];
 
 export const StructuredExtractionToneStudio = () => {
   const { toast } = useToast();
 
   const [rawText, setRawText] = useState("");
-  const [fieldSpec, setFieldSpec] = useState(DEFAULT_FIELDS);
-  const [tonesSpec, setTonesSpec] = useState(DEFAULT_TONES.join(", "));
   const [result, setResult] = useState<StructuredResult | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -35,34 +31,6 @@ export const StructuredExtractionToneStudio = () => {
       return;
     }
 
-    const fields = fieldSpec
-      .split(",")
-      .map((f) => f.trim())
-      .filter(Boolean);
-
-    const tones = tonesSpec
-      .split(",")
-      .map((t) => t.trim().toLowerCase())
-      .filter(Boolean);
-
-    if (!fields.length) {
-      toast({
-        title: "No fields to extract",
-        description: "List at least one field like: name, email, role",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!tones.length) {
-      toast({
-        title: "No tones specified",
-        description: "Add at least one tone like: formal, casual",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setLoading(true);
     setResult(null);
 
@@ -70,8 +38,8 @@ export const StructuredExtractionToneStudio = () => {
       const { data, error } = await supabase.functions.invoke<StructuredResult>("structured-studio", {
         body: {
           text: rawText,
-          fields,
-          tones,
+          fields: DEFAULT_FIELDS,
+          tones: DEFAULT_TONES,
         },
       });
 
@@ -117,33 +85,6 @@ export const StructuredExtractionToneStudio = () => {
             className="min-h-[180px] text-sm"
           />
 
-          <div className="grid gap-4 pt-2 md:grid-cols-2">
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Fields to extract (JSON keys)</label>
-              <Input
-                value={fieldSpec}
-                onChange={(e) => setFieldSpec(e.target.value)}
-                placeholder="name, email, role, company, skills"
-                className="text-xs"
-              />
-              <p className="text-[11px] text-muted-foreground">
-                Comma-separated list. We&apos;ll try to fill these keys from the text.
-              </p>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Tones for rewrites</label>
-              <Input
-                value={tonesSpec}
-                onChange={(e) => setTonesSpec(e.target.value)}
-                placeholder="formal, casual, recruiter, friendly"
-                className="text-xs"
-              />
-              <p className="text-[11px] text-muted-foreground">
-                How should the same message sound? List multiple tones to compare.
-              </p>
-            </div>
-          </div>
-
           <Button
             onClick={handleRun}
             disabled={loading || !rawText.trim()}
@@ -158,7 +99,7 @@ export const StructuredExtractionToneStudio = () => {
             ) : (
               <>
                 <Wand2 className="h-4 w-4" />
-                Extract JSON &amp; rewrite tones
+                Extract JSON &amp; cute tones
               </>
             )}
           </Button>
