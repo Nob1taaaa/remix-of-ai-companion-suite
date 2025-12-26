@@ -1,6 +1,7 @@
 import { Sparkles, Bot, Layers3, RadioTower } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ResumeScanner } from "@/components/ResumeScanner";
+import { AboutLab } from "@/components/AboutLab";
 
 const projects = [
   {
@@ -122,6 +123,8 @@ const Index = () => {
               </div>
             </aside>
           </header>
+
+          <AboutLab />
 
           <section aria-label="NLP and AI agent projects" className="space-y-6">
             <div className="flex items-baseline justify-between gap-4">
