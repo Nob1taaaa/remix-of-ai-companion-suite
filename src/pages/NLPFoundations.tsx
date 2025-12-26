@@ -38,11 +38,12 @@ const NLPFoundations = () => {
 
             <div className="space-y-4">
               <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl">
-                Build rock‑solid NLP instincts on real mini projects.
+                NLP Foundations Lab
               </h1>
               <p className="max-w-2xl text-balance text-sm text-muted-foreground md:text-base">
-                Learn how modern NLP actually works by playing with three tiny, practical tools: a predictive keyboard,
-                smart text classifier, and resume‑to‑job match analyzer.
+                Master the fundamentals of Natural Language Processing through three hands-on projects: predictive
+                keyboards, text classification pipelines, and resume scanning. Learn tokenization, embeddings, and
+                structured extraction.
               </p>
             </div>
           </header>
@@ -52,9 +53,9 @@ const NLPFoundations = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
                 <Keyboard className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="font-semibold">Predictive Keyboard Playground</h3>
+              <h3 className="font-semibold">Predictive Keyboard Model</h3>
               <p className="text-sm text-muted-foreground">
-                See how tiny language models guess your next word, just like the keyboard on your phone.
+                Train a tiny language model that suggests the next word as you type, like a cute mini phone keyboard.
               </p>
               <div className="flex items-center gap-2 text-xs">
                 <span className="rounded-full bg-green-500/20 px-2 py-1 font-medium text-green-700 dark:text-green-300">
@@ -67,9 +68,9 @@ const NLPFoundations = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
                 <Tag className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="font-semibold">Text Classification Studio</h3>
+              <h3 className="font-semibold">Text Classification Pipeline</h3>
               <p className="text-sm text-muted-foreground">
-                Turn messy sentences into clean labels like sentiment, spam vs. not‑spam, or high‑priority tickets.
+                Build a full pipeline that cleans text, extracts features and classifies sentiment, topics or spam.
               </p>
               <div className="flex items-center gap-2 text-xs">
                 <span className="rounded-full bg-green-500/20 px-2 py-1 font-medium text-green-700 dark:text-green-300">
@@ -82,9 +83,9 @@ const NLPFoundations = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
                 <UserCheck className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="font-semibold">AI‑Powered Resume Matcher</h3>
+              <h3 className="font-semibold">AI Resume Scanner</h3>
               <p className="text-sm text-muted-foreground">
-                Compare a resume to a role, surface key skills, and spot the gaps like a tiny hiring assistant.
+                Parse resumes, extract skills and experience, and score candidates against a target role.
               </p>
               <div className="flex items-center gap-2 text-xs">
                 <span className="rounded-full bg-green-500/20 px-2 py-1 font-medium text-green-700 dark:text-green-300">
@@ -101,7 +102,7 @@ const NLPFoundations = () => {
               </div>
               <div>
                 <h2 className="text-xl font-semibold md:text-2xl">Predictive Keyboard</h2>
-                <p className="text-sm text-muted-foreground">Type a sentence and watch next‑word suggestions appear in real time.</p>
+                <p className="text-sm text-muted-foreground">Type to get next-word suggestions</p>
               </div>
             </div>
             <PredictiveKeyboard />
@@ -114,47 +115,38 @@ const NLPFoundations = () => {
               </div>
               <div>
                 <h2 className="text-xl font-semibold md:text-2xl">Text Classification</h2>
-                <p className="text-sm text-muted-foreground">Classify reviews, emails, or messages into clear buckets in a single click.</p>
+                <p className="text-sm text-muted-foreground">Classify sentiment, spam, or topics</p>
               </div>
             </div>
             <TextClassification />
           </div>
 
           <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <UserCheck className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold md:text-2xl">AI Resume Scanner</h2>
-                <p className="text-sm text-muted-foreground">Paste or upload your resume and see how well it matches a target role.</p>
-              </div>
-            </div>
             <ResumeScanner />
           </div>
 
           <div className="rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6">
-            <h3 className="mb-3 font-semibold">What you’ll take away</h3>
+            <h3 className="mb-3 font-semibold">What You'll Learn</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>How raw text becomes tokens the model can understand.</span>
+                <span>Tokenization and text pre-processing techniques</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>How to go from unstructured text to clean labels and scores.</span>
+                <span>Feature extraction and embeddings for semantic understanding</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>How embeddings capture meaning beyond exact keywords.</span>
+                <span>Building end-to-end classification pipelines</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>How to design simple, end‑to‑end NLP flows that feel like real products.</span>
+                <span>Structured data extraction from unstructured text</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>Patterns you can reuse later in chatbots, search, and agents.</span>
+                <span>Real-world NLP application design patterns</span>
               </li>
             </ul>
           </div>

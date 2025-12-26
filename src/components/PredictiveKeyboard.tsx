@@ -47,7 +47,7 @@ export const PredictiveKeyboard = () => {
   };
 
   return (
-    <div className="space-y-4" aria-busy={loading} aria-live="polite">
+    <div className="space-y-4">
       <div className="space-y-2">
         <label className="text-sm font-medium">Type something</label>
         <Textarea
@@ -58,50 +58,41 @@ export const PredictiveKeyboard = () => {
         />
       </div>
 
-      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
-        <Button
-          onClick={handlePredict}
-          disabled={loading}
-          size="lg"
-          className="hover-scale relative flex items-center gap-2 px-5"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Thinking of next words…</span>
-            </>
-          ) : (
-            <>
-              <Sparkles className="h-4 w-4" />
-              <span>Predict Next Word</span>
-            </>
-          )}
-        </Button>
-
-        {loading && (
-          <p className="text-xs text-muted-foreground">
-            Using the text you&apos;ve typed so far – suggestions may take a moment.
-          </p>
+      <Button
+        onClick={handlePredict}
+        disabled={loading}
+        size="lg"
+        className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Predicting...
+          </>
+        ) : (
+          <>
+            <Sparkles className="h-4 w-4" />
+            Predict Next Word
+          </>
         )}
-      </div>
+      </Button>
 
       {predictions.length > 0 && (
         <div className="animate-fade-in space-y-3">
           <div className="flex items-center gap-2">
             <Zap className="h-4 w-4 text-primary" />
-            <p className="text-sm font-medium">
-              Tap a suggestion to keep writing
-              {loading && <span className="ml-2 text-xs text-muted-foreground">(refreshing…)</span>}
-            </p>
+            <p className="text-sm font-medium">Tap to add:</p>
           </div>
           <div className="flex flex-wrap gap-3">
             {predictions.map((word, i) => (
               <button
                 key={i}
                 onClick={() => addWord(word)}
-                className="hover-scale group relative overflow-hidden rounded-xl border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-primary transition-colors duration-200 hover:border-primary/40 hover:bg-primary/10"
-                style={{ animationDelay: `${i * 80}ms` }}
+                className="group relative overflow-hidden rounded-xl border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 px-5 py-3 text-sm font-semibold text-primary transition-all duration-300 hover:scale-110 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20"
+                style={{ animationDelay: `${i * 100}ms` }}
               >
+                <div className="absolute inset-0 bg-primary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <span className="relative">{word}</span>
               </button>
             ))}

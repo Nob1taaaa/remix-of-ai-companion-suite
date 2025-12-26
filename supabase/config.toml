@@ -1,7 +1,1 @@
 project_id = "sqamjfedqfdhoxdzszso"
-
-[functions.predictive-keyboard]
-verify_jwt = false
-
-[functions.classify-text]
-verify_jwt = false
