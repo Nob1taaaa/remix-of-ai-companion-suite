@@ -58,9 +58,10 @@ export const AboutLab = () => {
 
       <div className="rounded-xl border-l-4 border-primary/50 bg-primary/5 p-4">
         <p className="text-xs italic text-muted-foreground md:text-sm">
-          <span className="font-semibold not-italic text-foreground">Portfolio note:</span> This project demonstrates
-          my ability to architect full-stack AI applications, design clean UIs, integrate backend APIs, and work with
-          modern AI models—all without relying on pre-built templates.
+          <span className="font-semibold not-italic text-foreground">Portfolio note:</span> Crafted with care by
+          <span className="font-semibold not-italic text-foreground"> Harshit Shah</span> — this project demonstrates my
+          ability to architect full-stack AI applications, design clean UIs, integrate backend APIs, and work with
+          modern AI models, all without relying on pre-built templates.
         </p>
       </div>
     </section>
