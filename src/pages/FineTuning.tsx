@@ -1,7 +1,7 @@
-import { ArrowLeft, FileSearch, BookOpen } from "lucide-react";
+import { ArrowLeft, Braces, Wand2 } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { RagDocumentQA } from "@/components/RagDocumentQA";
+import { StructuredExtractionToneStudio } from "@/components/StructuredExtractionToneStudio";
 import { useAuth } from "@/hooks/useAuth";
 
 const FineTuning = () => {
@@ -28,19 +28,19 @@ const FineTuning = () => {
 
           <header className="space-y-6 animate-enter">
             <span className="pill-soft inline-flex items-center gap-2">
-              <FileSearch className="h-4 w-4 text-primary" />
+              <Braces className="h-4 w-4 text-primary" />
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                NLP • Retrieval-Augmented Generation
+                NLP • Structured output
               </span>
             </span>
 
             <div className="space-y-4">
               <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl">
-                RAG / Document Q&amp;A Studio
+                Structured Extraction &amp; Tone Studio
               </h1>
               <p className="max-w-2xl text-balance text-sm text-muted-foreground md:text-base">
-                Upload real artifacts like course notes, job descriptions, or product docs, then ask grounded questions
-                that must be answered using your sources—not model imagination.
+                Paste messy text, extract clean JSON fields, and compare how the same content sounds in different tones
+                like formal, casual, or recruiter.
               </p>
             </div>
           </header>
@@ -48,68 +48,45 @@ const FineTuning = () => {
           <div className="grid gap-8 md:grid-cols-2">
             <div className="space-y-4 rounded-2xl border bg-card/80 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <BookOpen className="h-6 w-6 text-primary" />
+                <Braces className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold">Grounded document question-answering</h3>
+              <h3 className="text-lg font-semibold">Text → JSON extraction</h3>
               <p className="text-sm text-muted-foreground">
-                Practice retrieval-augmented generation (RAG) by forcing the model to answer questions using only the
-                content you provide: notes, specs, or job descriptions.
+                Turn free-form text into neat key–value pairs that backends, databases, and APIs can actually use —
+                without hallucinating missing data.
               </p>
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground">Key Concepts:</div>
+                <div className="text-xs font-semibold text-muted-foreground">Great for:</div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="pill-soft text-[11px]">Retrieval vs. recall</span>
-                  <span className="pill-soft text-[11px]">Grounded answers</span>
-                  <span className="pill-soft text-[11px]">Hallucination control</span>
-                  <span className="pill-soft text-[11px]">Document QA</span>
+                  <span className="pill-soft text-[11px]">Resume / profile parsing</span>
+                  <span className="pill-soft text-[11px]">Job post normalization</span>
+                  <span className="pill-soft text-[11px]">Support ticket triage</span>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4 rounded-2xl border bg-card/80 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <FileSearch className="h-6 w-6 text-primary" />
+                <Wand2 className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold">Text, PDF, &amp; image inputs</h3>
+              <h3 className="text-lg font-semibold">Tone comparison lab</h3>
               <p className="text-sm text-muted-foreground">
-                Upload plain text, parse PDFs into text, or point the model at images (like slide screenshots) and see
-                how well it can ground its answers directly in your artifacts.
+                Rewrite the same content into multiple tones side-by-side — perfect for recruiters, marketers, and UX
+                writers who care about voice.
               </p>
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground">Great practice for:</div>
+                <div className="text-xs font-semibold text-muted-foreground">Example tones:</div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="pill-soft text-[11px]">Course &amp; exam prep</span>
-                  <span className="pill-soft text-[11px]">Job search &amp; resumes</span>
-                  <span className="pill-soft text-[11px]">Product &amp; API docs</span>
+                  <span className="pill-soft text-[11px]">Formal cover letter</span>
+                  <span className="pill-soft text-[11px]">Friendly DM</span>
+                  <span className="pill-soft text-[11px]">Recruiter outreach</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <RagDocumentQA />
-          </div>
-
-          <div className="rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6">
-            <h3 className="mb-3 font-semibold">What you&apos;ll learn here</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex gap-2">
-                <span className="text-primary">•</span>
-                <span>How RAG differs from pure prompting and fine-tuning.</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-primary">•</span>
-                <span>Why grounding answers in explicit sources reduces hallucinations.</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-primary">•</span>
-                <span>Trade-offs of text, PDFs, and images as knowledge sources.</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-primary">•</span>
-                <span>How to design prompts that demand citations and quoted evidence.</span>
-              </li>
-            </ul>
+            <StructuredExtractionToneStudio />
           </div>
         </div>
       </div>
