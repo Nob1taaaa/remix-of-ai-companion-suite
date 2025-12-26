@@ -98,10 +98,10 @@ export const ResumeScanner = () => {
             className="min-h-[200px] resize-none"
           />
           <div className="space-y-1 pt-2">
-            <label className="text-xs font-medium text-muted-foreground">Upload resume (.txt)</label>
+            <label className="text-xs font-medium text-muted-foreground">Upload resume (.pdf or .txt)</label>
             <input
               type="file"
-              accept=".txt,text/plain"
+              accept=".txt,application/pdf,.pdf"
               className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-foreground hover:file:bg-accent/20"
               onChange={async (e) => {
                 const file = e.target.files?.[0];
@@ -111,13 +111,16 @@ export const ResumeScanner = () => {
                   setResumeText(text);
                   toast({
                     title: "Resume loaded",
-                    description: `Imported text from ${file.name}`,
+                    description:
+                      file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
+                        ? `Imported text from ${file.name}. If formatting looks odd, consider exporting it as plain text.`
+                        : `Imported text from ${file.name}`,
                   });
                 } catch (err) {
                   console.error("File read error", err);
                   toast({
                     title: "Could not read file",
-                    description: "Make sure it is a plain text (.txt) resume.",
+                    description: "Make sure it is a PDF or plain text resume.",
                     variant: "destructive",
                   });
                 }
