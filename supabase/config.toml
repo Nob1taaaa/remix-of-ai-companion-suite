@@ -1,1 +1,22 @@
 project_id = "qvatiyoifdxzvmkqffus"
+
+[functions.scan-resume]
+verify_jwt = false
+
+[functions.predictive-keyboard]
+verify_jwt = false
+
+[functions.classify-text]
+verify_jwt = false
+
+[functions.stream-chat]
+verify_jwt = false
+
+[functions.multi-agent]
+verify_jwt = false
+
+[functions.rag-qa]
+verify_jwt = false
+
+[functions.structured-studio]
+verify_jwt = false
