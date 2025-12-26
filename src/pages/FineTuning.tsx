@@ -41,11 +41,10 @@ const FineTuning = () => {
 
             <div className="space-y-4">
               <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl">
-                Structured Extraction &amp; Tone Studio
+                Structured JSON &amp; TOON Studio
               </h1>
               <p className="max-w-2xl text-balance text-sm text-muted-foreground md:text-base">
-                Paste messy text, extract clean JSON fields, and compare how the same content sounds in different tones
-                like formal, casual, or recruiter.
+                Paste messy text and turn it into clean JSON plus a compact TOON line, with no invented fields or empty values.
               </p>
             </div>
           </header>
@@ -74,17 +73,14 @@ const FineTuning = () => {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <Wand2 className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold">Tone comparison lab</h3>
+              <h3 className="text-lg font-semibold">TOON format helper</h3>
               <p className="text-sm text-muted-foreground">
-                Rewrite the same content into multiple tones side-by-side — perfect for recruiters, marketers, and UX
-                writers who care about voice.
+                See the same structured data rendered as a single TOON line — perfect for prompts, logs, and quick overviews.
               </p>
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground">Example tones:</div>
-                <div className="flex flex-wrap gap-2">
-                  <span className="pill-soft text-[11px]">Formal cover letter</span>
-                  <span className="pill-soft text-[11px]">Friendly DM</span>
-                  <span className="pill-soft text-[11px]">Recruiter outreach</span>
+                <div className="text-xs font-semibold text-muted-foreground">Example TOON:</div>
+                <div className="pill-soft text-[11px]">
+                  name=harshit shah; role=computer science student
                 </div>
               </div>
             </div>
