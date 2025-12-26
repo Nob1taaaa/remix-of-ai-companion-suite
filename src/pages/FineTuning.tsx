@@ -1,8 +1,13 @@
+import { Suspense, lazy } from "react";
 import { ArrowLeft, Braces, Wand2 } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { StructuredExtractionToneStudio } from "@/components/StructuredExtractionToneStudio";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
+
+const StructuredExtractionToneStudioLazy = lazy(() =>
+  import("@/components/StructuredExtractionToneStudio").then((m) => ({ default: m.StructuredExtractionToneStudio }))
+);
 
 const FineTuning = () => {
   const { user, loading } = useAuth();
@@ -86,7 +91,17 @@ const FineTuning = () => {
           </div>
 
           <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <StructuredExtractionToneStudio />
+            <Suspense
+              fallback={
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-48" />
+                  <Skeleton className="h-28 w-full" />
+                  <Skeleton className="h-40 w-full" />
+                </div>
+              }
+            >
+              <StructuredExtractionToneStudioLazy />
+            </Suspense>
           </div>
         </div>
       </div>
