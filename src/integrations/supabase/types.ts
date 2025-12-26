@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agent_task_history: {
+        Row: {
+          created_at: string
+          final_response: string | null
+          id: string
+          planner_output: string | null
+          raw_result: Json | null
+          researcher_output: string | null
+          session_id: string | null
+          task: string
+          writer_output: string | null
+        }
+        Insert: {
+          created_at?: string
+          final_response?: string | null
+          id?: string
+          planner_output?: string | null
+          raw_result?: Json | null
+          researcher_output?: string | null
+          session_id?: string | null
+          task: string
+          writer_output?: string | null
+        }
+        Update: {
+          created_at?: string
+          final_response?: string | null
+          id?: string
+          planner_output?: string | null
+          raw_result?: Json | null
+          researcher_output?: string | null
+          session_id?: string | null
+          task?: string
+          writer_output?: string | null
+        }
+        Relationships: []
+      }
+      resume_scan_history: {
+        Row: {
+          analysis: Json | null
+          created_at: string
+          id: string
+          job_description: string
+          match_score: number | null
+          matched_skills: Json | null
+          missing_skills: Json | null
+          resume_text: string
+          session_id: string | null
+        }
+        Insert: {
+          analysis?: Json | null
+          created_at?: string
+          id?: string
+          job_description: string
+          match_score?: number | null
+          matched_skills?: Json | null
+          missing_skills?: Json | null
+          resume_text: string
+          session_id?: string | null
+        }
+        Update: {
+          analysis?: Json | null
+          created_at?: string
+          id?: string
+          job_description?: string
+          match_score?: number | null
+          matched_skills?: Json | null
+          missing_skills?: Json | null
+          resume_text?: string
+          session_id?: string | null
+        }
+        Relationships: []
+      }
+      text_classification_history: {
+        Row: {
+          category: string
+          confidence: number | null
+          created_at: string
+          id: string
+          input_text: string
+          label: string | null
+          raw_result: Json | null
+          session_id: string | null
+        }
+        Insert: {
+          category: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          input_text: string
+          label?: string | null
+          raw_result?: Json | null
+          session_id?: string | null
+        }
+        Update: {
+          category?: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          input_text?: string
+          label?: string | null
+          raw_result?: Json | null
+          session_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

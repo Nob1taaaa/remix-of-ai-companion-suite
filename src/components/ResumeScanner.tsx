@@ -45,6 +45,16 @@ export const ResumeScanner = () => {
         title: "Analysis complete!",
         description: `Match score: ${data.score}/100`,
       });
+
+      // Save to history
+      await supabase.from('resume_scan_history').insert({
+        resume_text: resumeText,
+        job_description: jobDescription,
+        match_score: data.score,
+        matched_skills: data.matchedSkills,
+        missing_skills: data.missingSkills,
+        analysis: data
+      });
     } catch (error: any) {
       console.error('Scan error:', error);
       toast({
