@@ -1,1 +1,4 @@
 project_id = "sqamjfedqfdhoxdzszso"
+
+[functions.predictive-keyboard]
+verify_jwt = false
