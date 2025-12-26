@@ -107,41 +107,70 @@ export const StreamingAssistant = () => {
   };
 
   return (
-    <div className="flex h-[500px] flex-col">
-      <Card className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground">
-            Start a conversation with the AI assistant
-          </p>
-        )}
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                msg.role === 'user'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground'
-              }`}
-            >
-              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+    <div className="flex h-[500px] flex-col space-y-4">
+      <Card className="flex-1 overflow-y-auto border-2 border-primary/20 bg-gradient-to-b from-card to-card/50 p-4 shadow-xl">
+        <div className="space-y-4">
+          {messages.length === 0 && (
+            <div className="flex h-full flex-col items-center justify-center space-y-3 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 animate-pulse">
+                <Send className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Start a conversation</p>
+                <p className="text-sm text-muted-foreground">
+                  Ask anything and get real-time streaming responses
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+          )}
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex animate-fade-in ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              style={{ animationDelay: `${i * 50}ms` }}
+            >
+              <div
+                className={`group relative max-w-[85%] transform rounded-2xl px-4 py-3 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md ${
+                  msg.role === 'user'
+                    ? 'bg-gradient-to-br from-primary to-primary/80 text-primary-foreground'
+                    : 'border border-border/50 bg-gradient-to-br from-muted to-muted/50 text-foreground'
+                }`}
+              >
+                {msg.role === 'assistant' && (
+                  <div className="absolute -left-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
+                    <Send className="h-3 w-3" />
+                  </div>
+                )}
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                {msg.content === '' && (
+                  <div className="flex items-center gap-1">
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" style={{ animationDelay: '0ms' }} />
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" style={{ animationDelay: '150ms' }} />
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" style={{ animationDelay: '300ms' }} />
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </Card>
 
-      <div className="flex gap-2 pt-4">
+      <div className="flex gap-2">
         <Input
           placeholder="Type your message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+          onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
           disabled={loading}
+          className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
         />
-        <Button onClick={handleSend} disabled={loading || !input.trim()}>
+        <Button 
+          onClick={handleSend} 
+          disabled={loading || !input.trim()}
+          className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (

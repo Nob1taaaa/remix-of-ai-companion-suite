@@ -137,23 +137,30 @@ const Index = () => {
             </div>
 
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project) => (
+              {projects.map((project, idx) => (
                 <Link key={project.id} to={project.path}>
-                  <article className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-card/90 p-4 shadow-sm shadow-primary/10 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/25 md:p-5">
+                  <article 
+                    className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border-2 border-border/50 bg-gradient-to-br from-card to-card/50 p-4 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 md:p-5"
+                    style={{ animationDelay: `${idx * 100}ms` }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/5 to-primary/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    
                     <div className="relative z-10 space-y-3">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="pill-soft text-[11px]">{project.tag}</span>
-                        <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-medium text-muted-foreground">
+                        <span className="pill-soft text-[11px] transition-all duration-300 group-hover:bg-primary/20">{project.tag}</span>
+                        <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-medium text-muted-foreground transition-all duration-300 group-hover:bg-primary/10 group-hover:text-primary">
                           {project.difficulty}
                         </span>
                       </div>
-                      <h3 className="text-base font-semibold md:text-lg">{project.title}</h3>
-                      <p className="text-xs text-muted-foreground md:text-sm">{project.description}</p>
+                      <h3 className="text-base font-semibold transition-colors duration-300 group-hover:text-primary md:text-lg">{project.title}</h3>
+                      <p className="text-xs leading-relaxed text-muted-foreground md:text-sm">{project.description}</p>
                     </div>
 
                     <div className="relative z-10 mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
-                      <span>Focus: {project.focus}</span>
-                      <span className="story-link">Explore →</span>
+                      <span className="transition-colors duration-300 group-hover:text-foreground">Focus: {project.focus}</span>
+                      <span className="story-link flex items-center gap-1 font-medium transition-all duration-300 group-hover:gap-2 group-hover:text-primary">
+                        Explore →
+                      </span>
                     </div>
                   </article>
                 </Link>
