@@ -92,10 +92,24 @@ Return ONLY valid JSON with this exact shape and nothing else:
 
     let parsed;
     try {
+      // Try to parse full content first
       parsed = JSON.parse(content);
     } catch (e) {
-      console.error("Failed to parse JSON from AI response", content);
-      throw new Error("AI did not return valid JSON");
+      // Fallback: try to extract the first JSON object substring
+      const firstBrace = content.indexOf("{");
+      const lastBrace = content.lastIndexOf("}");
+      if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+        console.error("Failed to locate JSON object in AI response", content);
+        throw new Error("AI did not return valid JSON");
+      }
+
+      const jsonSlice = content.slice(firstBrace, lastBrace + 1);
+      try {
+        parsed = JSON.parse(jsonSlice);
+      } catch (inner) {
+        console.error("Failed to parse JSON slice from AI response", jsonSlice);
+        throw new Error("AI did not return valid JSON");
+      }
     }
 
     const safeExtracted = parsed.extracted && typeof parsed.extracted === "object" ? parsed.extracted : {};
