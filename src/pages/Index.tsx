@@ -48,18 +48,18 @@ const Index = () => {
           <div className="absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-primary/40 blur-3xl" />
         </div>
 
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-12 px-6 pb-16 pt-12 md:px-8 md:pt-16">
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-4 pb-14 pt-10 md:gap-12 md:px-8 md:pb-16 md:pt-16">
           <header className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between animate-enter">
             <div className="space-y-6">
               <span className="pill-soft inline-flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground md:text-xs">
                   NLP • JSON &amp; TOON • Agents
                 </span>
               </span>
 
-              <div className="space-y-4">
-                <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl">
+              <div className="space-y-3 md:space-y-4">
+                <h1 className="text-balance text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
                   Cute NLP &amp; AI agent projects in one tiny lab.
                 </h1>
                 <p className="max-w-xl text-balance text-sm text-muted-foreground md:text-base">
@@ -68,19 +68,22 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
-                <Link to={user ? "/my-lab" : "/auth"}>
-                  <Button variant="hero" className="hover-scale">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <Link to={user ? "/my-lab" : "/auth"} className="w-full sm:w-auto">
+                  <Button variant="hero" className="hover-scale w-full justify-center px-5 py-3 text-sm md:w-auto">
                     <Bot className="h-4 w-4" />
                     {user ? "Go to My Lab" : "Sign in to start"}
                   </Button>
                 </Link>
-                <button className="story-link text-sm font-medium text-muted-foreground">
-                  <span>View suggested learning path</span>
-                </button>
+                <Button
+                  variant="outline"
+                  className="w-full justify-center text-sm text-muted-foreground md:w-auto"
+                >
+                  View suggested learning path
+                </Button>
               </div>
 
-              <dl className="grid max-w-xl grid-cols-3 gap-4 text-xs text-muted-foreground md:text-sm">
+              <dl className="grid max-w-xl grid-cols-2 gap-4 text-xs text-muted-foreground sm:grid-cols-3 md:text-sm">
                 <div>
                   <dt className="font-semibold text-foreground">3 tracks • 7 ideas</dt>
                   <dd>Grouped into clear learning paths</dd>
@@ -89,7 +92,7 @@ const Index = () => {
                   <dt className="font-semibold text-foreground">Cute by design</dt>
                   <dd>Soft gradients, tiny animations</dd>
                 </div>
-                <div>
+                <div className="col-span-2 sm:col-span-1">
                   <dt className="font-semibold text-foreground">Agent ready</dt>
                   <dd>Ideas easy to turn into apps</dd>
                 </div>
