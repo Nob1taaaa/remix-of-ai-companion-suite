@@ -135,7 +135,9 @@ const Index = () => {
             </aside>
           </header>
 
-          <AboutLab />
+          <div className="hidden md:block">
+            <AboutLab />
+          </div>
 
           <section aria-label="NLP and AI agent projects" className="space-y-6">
             <div className="flex items-baseline justify-between gap-4">
@@ -173,7 +175,7 @@ const Index = () => {
                     <div className="relative z-10 mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
                       <span className="transition-colors duration-300 group-hover:text-foreground">Focus: {project.focus}</span>
                       <span className="story-link flex items-center gap-1 font-medium transition-all duration-300 group-hover:gap-2 group-hover:text-primary">
-                        Explore 
+                        Explore →
                       </span>
                     </div>
                   </article>
