@@ -63,8 +63,8 @@ const Index = () => {
                   Cute NLP &amp; AI agent projects in one tiny lab.
                 </h1>
                 <p className="max-w-xl text-balance text-sm text-muted-foreground md:text-base">
-                  Explore three project tracks that group seven ideas: core NLP workflows, fine‑tuning & LoRA, and
-                  multi‑agent / real‑time assistants — all wrapped in a playful interface.
+                  Explore three project tracks that group seven ideas: core NLP workflows, structured JSON &amp; TOON studio,
+                  and multi-agent / real-time assistants — all wrapped in a playful interface.
                 </p>
               </div>
 
