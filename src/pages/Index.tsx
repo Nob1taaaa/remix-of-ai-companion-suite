@@ -1,4 +1,5 @@
 import { Sparkles, Bot, Layers3, RadioTower } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ResumeScanner } from "@/components/ResumeScanner";
 import { AboutLab } from "@/components/AboutLab";
@@ -12,6 +13,7 @@ const projects = [
     description:
       "Start with predictive keyboards, text classification, and a resume scanner to master core NLP workflows.",
     focus: "Tokenization, classification, extraction",
+    path: "/nlp-foundations",
   },
   {
     id: 2,
@@ -21,6 +23,7 @@ const projects = [
     description:
       "Combine classic supervised fine‑tuning with LoRA adapters to adapt base models to your own data.",
     focus: "Supervised fine‑tuning, adapters, experiments",
+    path: "/fine-tuning",
   },
   {
     id: 3,
@@ -30,6 +33,7 @@ const projects = [
     description:
       "Design multi‑agent systems and live streaming assistants that feel fast, collaborative, and conversational.",
     focus: "Orchestration, tools, streaming UX",
+    path: "/agents",
   },
 ];
 
@@ -134,26 +138,25 @@ const Index = () => {
 
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project) => (
-                <article
-                  key={project.id}
-                  className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-card/90 p-4 shadow-sm shadow-primary/10 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/25 md:p-5"
-                >
-                  <div className="relative z-10 space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="pill-soft text-[11px]">{project.tag}</span>
-                      <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-medium text-muted-foreground">
-                        {project.difficulty}
-                      </span>
+                <Link key={project.id} to={project.path}>
+                  <article className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-card/90 p-4 shadow-sm shadow-primary/10 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/25 md:p-5">
+                    <div className="relative z-10 space-y-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="pill-soft text-[11px]">{project.tag}</span>
+                        <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-medium text-muted-foreground">
+                          {project.difficulty}
+                        </span>
+                      </div>
+                      <h3 className="text-base font-semibold md:text-lg">{project.title}</h3>
+                      <p className="text-xs text-muted-foreground md:text-sm">{project.description}</p>
                     </div>
-                    <h3 className="text-base font-semibold md:text-lg">{project.title}</h3>
-                    <p className="text-xs text-muted-foreground md:text-sm">{project.description}</p>
-                  </div>
 
-                  <div className="relative z-10 mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
-                    <span>Focus: {project.focus}</span>
-                    <span className="story-link">View steps</span>
-                  </div>
-                </article>
+                    <div className="relative z-10 mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <span>Focus: {project.focus}</span>
+                      <span className="story-link">Explore →</span>
+                    </div>
+                  </article>
+                </Link>
               ))}
             </div>
           </section>
