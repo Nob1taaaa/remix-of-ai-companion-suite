@@ -102,7 +102,7 @@ const NLPFoundations = () => {
               </div>
               <div>
                 <h2 className="text-xl font-semibold md:text-2xl">Predictive Keyboard</h2>
-                <p className="text-sm text-muted-foreground">Type to get next-word suggestions</p>
+                <p className="text-sm text-muted-foreground">Type a sentence and watch next‑word suggestions appear in real time.</p>
               </div>
             </div>
             <PredictiveKeyboard />
