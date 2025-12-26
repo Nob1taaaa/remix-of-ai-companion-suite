@@ -38,7 +38,13 @@ serve(async (req) => {
 1. NEVER hallucinate: if an input field cannot be found explicitly in the text, set its value to an empty string.
 2. For the JSON extraction, only use keys from the provided field list.
 3. For tone rewrites, preserve factual content but adjust style.
-4. Keep all outputs concise and usable in real applications.`;
+4. Keep all outputs concise and usable in real applications.
+
+Return ONLY valid JSON with this exact shape and nothing else:
+{
+  "extracted": { "field": "value", ... },
+  "rewrites": { "tone": "text", ... }
+}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -55,35 +61,6 @@ serve(async (req) => {
             content: `FIELDS: ${effectiveFields.join(", ")}\nTONES: ${effectiveTones.join(", ")}\n\nTEXT:\n${text}`,
           },
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "extract_and_rewrite",
-              description:
-                "Extract structured fields and generate multiple tone rewrites from a single input text without hallucination.",
-              parameters: {
-                type: "object",
-                properties: {
-                  extracted: {
-                    type: "object",
-                    description: "Key-value map where keys are the requested field names and values are strings (may be empty).",
-                    additionalProperties: { type: "string" },
-                  },
-                  rewrites: {
-                    type: "object",
-                    description:
-                      "Key-value map where keys are tone labels (e.g. 'formal', 'casual') and values are the rewritten text.",
-                    additionalProperties: { type: "string" },
-                  },
-                },
-                required: ["extracted", "rewrites"],
-                additionalProperties: false,
-              },
-            },
-          },
-        ],
-        tool_choice: { type: "function", function: { name: "extract_and_rewrite" } },
       }),
     });
 
@@ -106,17 +83,26 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const content = data.choices?.[0]?.message?.content;
 
-    if (!toolCall?.function?.arguments) {
+    if (!content || typeof content !== "string") {
       console.error("Unexpected AI response format", data);
       throw new Error("Invalid AI response format");
     }
 
-    const parsed = JSON.parse(toolCall.function.arguments);
+    let parsed;
+    try {
+      parsed = JSON.parse(content);
+    } catch (e) {
+      console.error("Failed to parse JSON from AI response", content);
+      throw new Error("AI did not return valid JSON");
+    }
+
+    const safeExtracted = parsed.extracted && typeof parsed.extracted === "object" ? parsed.extracted : {};
+    const safeRewrites = parsed.rewrites && typeof parsed.rewrites === "object" ? parsed.rewrites : {};
 
     return new Response(
-      JSON.stringify(parsed),
+      JSON.stringify({ extracted: safeExtracted, rewrites: safeRewrites }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
