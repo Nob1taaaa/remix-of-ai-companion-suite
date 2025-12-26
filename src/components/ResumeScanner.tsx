@@ -92,11 +92,38 @@ export const ResumeScanner = () => {
         <div className="space-y-2">
           <label className="text-sm font-medium">Resume Text</label>
           <Textarea
-            placeholder="Paste your resume here..."
+            placeholder="Paste your resume here... or upload a .txt file below"
             value={resumeText}
             onChange={(e) => setResumeText(e.target.value)}
             className="min-h-[200px] resize-none"
           />
+          <div className="space-y-1 pt-2">
+            <label className="text-xs font-medium text-muted-foreground">Upload resume (.txt)</label>
+            <input
+              type="file"
+              accept=".txt,text/plain"
+              className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-foreground hover:file:bg-accent/20"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const text = await file.text();
+                  setResumeText(text);
+                  toast({
+                    title: "Resume loaded",
+                    description: `Imported text from ${file.name}`,
+                  });
+                } catch (err) {
+                  console.error("File read error", err);
+                  toast({
+                    title: "Could not read file",
+                    description: "Make sure it is a plain text (.txt) resume.",
+                    variant: "destructive",
+                  });
+                }
+              }}
+            />
+          </div>
         </div>
 
         <div className="space-y-2">
