@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const Index = lazy(() => import("./pages/Index"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -25,18 +26,23 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <ScrollToTop />
-          <Suspense fallback={null}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/my-lab" element={<MyLab />} />
-              <Route path="/nlp-foundations" element={<NLPFoundations />} />
-              <Route path="/fine-tuning" element={<FineTuning />} />
-              <Route path="/agents" element={<Agents />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+          <div className="flex min-h-screen flex-col">
+            <div className="flex-1">
+              <Suspense fallback={null}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/my-lab" element={<MyLab />} />
+                  <Route path="/nlp-foundations" element={<NLPFoundations />} />
+                  <Route path="/fine-tuning" element={<FineTuning />} />
+                  <Route path="/agents" element={<Agents />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </div>
+            <SiteFooter />
+          </div>
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
