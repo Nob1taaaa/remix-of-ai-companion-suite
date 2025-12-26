@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.rag-qa]
 verify_jwt = false
+
+[functions.structured-studio]
+verify_jwt = false

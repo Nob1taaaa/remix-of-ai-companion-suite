@@ -18,12 +18,12 @@ const projects = [
   },
   {
     id: 2,
-    title: "Fine‑tuning Studio (LLM + LoRA)",
-    tag: "LLM • Fine‑tuning",
+    title: "Structured Extraction & Tone Studio",
+    tag: "LLM • Structured output",
     difficulty: "Intermediate–Advanced",
     description:
-      "Combine classic supervised fine‑tuning with LoRA adapters to adapt base models to your own data.",
-    focus: "Supervised fine‑tuning, adapters, experiments",
+      "Paste messy text, extract clean JSON fields, and compare tone rewrites for real-world UX and data pipelines.",
+    focus: "Text → JSON, tone control",
     path: "/fine-tuning",
   },
   {
