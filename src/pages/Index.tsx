@@ -52,7 +52,7 @@ const Index = () => {
 
               <div className="space-y-4">
                 <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl">
-                  NLP, Fine-Tuning & AI agent projects in one tiny lab.
+                  NLP,  Fine-Tuning & AI agent projects in one tiny lab.
                 </h1>
                 <p className="max-w-xl text-balance text-sm text-muted-foreground md:text-base">
                   Explore three project tracks that group seven ideas: core NLP workflows, fine‑tuning & LoRA, and
