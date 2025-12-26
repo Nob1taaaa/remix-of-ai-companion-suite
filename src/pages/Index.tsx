@@ -101,10 +101,10 @@ const Index = () => {
 
             <aside className="mt-4 w-full max-w-sm animate-scale-in md:mt-0">
               <div className="relative rounded-3xl bg-card/80 p-5 shadow-xl shadow-primary/15 backdrop-blur-md">
-                <div className="absolute right-6 top-6 flex items-center gap-2 rounded-full bg-secondary/80 px-3 py-1 text-[11px] font-medium text-secondary-foreground">
-                  <RadioTower className="h-3 w-3" />
-                  <span>Real‑time friendly</span>
-                </div>
+              <div className="absolute right-3 top-3 flex max-w-[60%] items-center gap-1.5 rounded-full bg-secondary/80 px-2.5 py-1 text-[10px] font-medium text-secondary-foreground shadow-sm md:right-6 md:top-6 md:max-w-none md:px-3 md:text-[11px]">
+                <RadioTower className="h-3 w-3 shrink-0 text-primary" />
+                <span className="truncate md:whitespace-normal">Real‑time friendly</span>
+              </div>
                 <div className="mb-6 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                     <Layers3 className="h-5 w-5" />
