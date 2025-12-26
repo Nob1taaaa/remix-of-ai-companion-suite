@@ -29,6 +29,15 @@ export const ResumeScanner = () => {
   const { user } = useAuth();
 
   const handleScan = async () => {
+    if (!user) {
+      toast({
+        title: "Login required",
+        description: "Please sign in to use the Resume Scanner",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!resumeText.trim() || !jobDescription.trim()) {
       toast({
         title: "Missing input",
