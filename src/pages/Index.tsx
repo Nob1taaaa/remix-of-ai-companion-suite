@@ -4,66 +4,30 @@ import { Button } from "@/components/ui/button";
 const projects = [
   {
     id: 1,
-    title: "Predictive Keyboard Model",
-    tag: "NLP • Next-token",
-    difficulty: "Beginner",
+    title: "NLP Foundations Lab",
+    tag: "NLP • Core skills",
+    difficulty: "Beginner–Intermediate",
     description:
-      "Train a tiny language model that suggests the next word as you type, like a cute mini phone keyboard.",
-    focus: "Sequence modeling, tokenization, sampling",
+      "Start with predictive keyboards, text classification, and a resume scanner to master core NLP workflows.",
+    focus: "Tokenization, classification, extraction",
   },
   {
     id: 2,
-    title: "Text Classification Pipeline",
-    tag: "NLP • Pipelines",
-    difficulty: "Beginner–Intermediate",
+    title: "Fine‑tuning Studio (LLM + LoRA)",
+    tag: "LLM • Fine‑tuning",
+    difficulty: "Intermediate–Advanced",
     description:
-      "Build a full pipeline that cleans text, extracts features and classifies sentiment, topics or spam.",
-    focus: "Pre-processing, embeddings, evaluation",
+      "Combine classic supervised fine‑tuning with LoRA adapters to adapt base models to your own data.",
+    focus: "Supervised fine‑tuning, adapters, experiments",
   },
   {
     id: 3,
-    title: "Fine-tune LLM on Your Data",
-    tag: "LLM • Supervised",
-    difficulty: "Intermediate",
-    description:
-      "Adapt a base model to your own Q&A or support data so it talks like your project or brand.",
-    focus: "Prompt formats, training–eval loop",
-  },
-  {
-    id: 4,
-    title: "LoRA Fine-tuning Playground",
-    tag: "LLM • LoRA",
-    difficulty: "Intermediate–Advanced",
-    description:
-      "Use parameter-efficient LoRA adapters to teach an LLM a new style or domain on a budget.",
-    focus: "Adapters, PEFT, experiment tracking",
-  },
-  {
-    id: 5,
-    title: "Multi‑Agent System",
-    tag: "Agents • Orchestration",
+    title: "AI Agents & Real‑time Assistants",
+    tag: "Agents • Systems",
     difficulty: "Advanced",
     description:
-      "Design a little AI squad: planner, researcher and coder agents collaborating to solve tasks.",
-    focus: "Tool use, routing, coordination",
-  },
-  {
-    id: 6,
-    title: "AI Resume Scanner",
-    tag: "NLP • Extraction",
-    difficulty: "Intermediate",
-    description:
-      "Parse resumes, extract skills and experience, and score candidates against a target role.",
-    focus: "Structured extraction, scoring, UX",
-  },
-  {
-    id: 7,
-    title: "Real‑time Assistants",
-    tag: "Agents • Live",
-    difficulty: "Advanced",
-    description:
-      "Prototype live assistants that stream responses token‑by‑token for chatty, responsive UX.",
-    focus: "Streaming, latency, conversation design",
+      "Design multi‑agent systems and live streaming assistants that feel fast, collaborative, and conversational.",
+    focus: "Orchestration, tools, streaming UX",
   },
 ];
 
@@ -91,8 +55,8 @@ const Index = () => {
                   Cute NLP &amp; AI agent projects in one tiny lab.
                 </h1>
                 <p className="max-w-xl text-balance text-sm text-muted-foreground md:text-base">
-                  Explore seven hands‑on ideas covering prediction, classification, fine‑tuning, LoRA, multi‑agent systems,
-                  resume screening and real‑time assistants — all wrapped in a playful interface.
+                  Explore three project tracks that group seven ideas: core NLP workflows, fine‑tuning & LoRA, and
+                  multi‑agent / real‑time assistants — all wrapped in a playful interface.
                 </p>
               </div>
 
@@ -108,8 +72,8 @@ const Index = () => {
 
               <dl className="grid max-w-xl grid-cols-3 gap-4 text-xs text-muted-foreground md:text-sm">
                 <div>
-                  <dt className="font-semibold text-foreground">7 mini builds</dt>
-                  <dd>From first token to full agents</dd>
+                  <dt className="font-semibold text-foreground">3 tracks • 7 ideas</dt>
+                  <dd>Grouped into clear learning paths</dd>
                 </div>
                 <div>
                   <dt className="font-semibold text-foreground">Cute by design</dt>
