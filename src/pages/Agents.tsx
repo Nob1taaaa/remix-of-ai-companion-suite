@@ -1,9 +1,17 @@
+import { Suspense, lazy } from "react";
 import { ArrowLeft, Bot, Radio } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MultiAgentSystem } from "@/components/MultiAgentSystem";
-import { StreamingAssistant } from "@/components/StreamingAssistant";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
+
+const MultiAgentSystemLazy = lazy(() =>
+  import("@/components/MultiAgentSystem").then((m) => ({ default: m.MultiAgentSystem }))
+);
+
+const StreamingAssistantLazy = lazy(() =>
+  import("@/components/StreamingAssistant").then((m) => ({ default: m.StreamingAssistant }))
+);
 
 const Agents = () => {
   const { user, loading } = useAuth();
@@ -98,7 +106,17 @@ const Agents = () => {
                 <p className="text-sm text-muted-foreground">Planner, Researcher, and Writer collaborate</p>
               </div>
             </div>
-            <MultiAgentSystem />
+            <Suspense
+              fallback={
+                <div className="space-y-4">
+                  <Skeleton className="h-8 w-40" />
+                  <Skeleton className="h-24 w-full" />
+                  <Skeleton className="h-10 w-32" />
+                </div>
+              }
+            >
+              <MultiAgentSystemLazy />
+            </Suspense>
           </div>
 
           <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
@@ -111,7 +129,16 @@ const Agents = () => {
                 <p className="text-sm text-muted-foreground">Live chat with token-by-token responses</p>
               </div>
             </div>
-            <StreamingAssistant />
+            <Suspense
+              fallback={
+                <div className="space-y-4">
+                  <Skeleton className="h-8 w-48" />
+                  <Skeleton className="h-40 w-full" />
+                </div>
+              }
+            >
+              <StreamingAssistantLazy />
+            </Suspense>
           </div>
 
           <div className="rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6">
