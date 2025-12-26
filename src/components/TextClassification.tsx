@@ -40,6 +40,15 @@ export const TextClassification = () => {
 
       if (error) throw error;
       setResult(data);
+
+      // Save to history
+      await supabase.from('text_classification_history').insert({
+        input_text: text,
+        category,
+        label: data?.label,
+        confidence: data?.confidence,
+        raw_result: data
+      });
     } catch (error: any) {
       console.error('Classification error:', error);
       toast({
