@@ -71,7 +71,9 @@ export const FineTuningSimulator = () => {
         onClick={simulateTraining}
         disabled={isTraining || !dataset.trim()}
         size="lg"
+        className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
       >
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
         {isTraining ? (
           <>
             <Brain className="h-4 w-4 animate-pulse" />
@@ -91,37 +93,66 @@ export const FineTuningSimulator = () => {
       </Button>
 
       {(isTraining || steps.length > 0) && (
-        <Card className="animate-fade-in p-6 space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">Training Progress</span>
-              <span className="text-muted-foreground">{Math.round(progress)}%</span>
-            </div>
-            <Progress value={progress} />
-          </div>
-
-          {steps.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-sm font-semibold">Training Metrics</h4>
-              <div className="space-y-1">
-                {steps.map((step) => (
-                  <div key={step.epoch} className="flex items-center justify-between text-xs border-b border-border py-2">
-                    <span className="font-medium">Epoch {step.epoch}</span>
-                    <div className="flex gap-4">
-                      <span>Loss: {step.loss.toFixed(3)}</span>
-                      <span>Accuracy: {(step.accuracy * 100).toFixed(1)}%</span>
-                    </div>
-                  </div>
-                ))}
+        <Card className="animate-scale-in overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-card to-card/50 p-6 shadow-xl shadow-primary/10">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-semibold">Training Progress</span>
+                <span className="font-mono text-lg text-primary">{Math.round(progress)}%</span>
+              </div>
+              <div className="relative h-3 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/60 transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute inset-0 animate-pulse bg-white/20" />
+                </div>
               </div>
             </div>
-          )}
 
-          {completed && (
-            <div className="rounded-lg bg-green-500/10 border border-green-500/20 p-4 text-sm text-green-700 dark:text-green-300">
-              ✓ Model fine-tuned successfully! Final accuracy: {((steps[steps.length - 1]?.accuracy || 0) * 100).toFixed(1)}%
-            </div>
-          )}
+            {steps.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold">Training Metrics</h4>
+                <div className="space-y-2">
+                  {steps.map((step, idx) => (
+                    <div
+                      key={step.epoch}
+                      className="flex items-center justify-between rounded-lg border border-border/50 bg-background/50 px-4 py-3 text-xs transition-all duration-300 hover:border-primary/30 hover:bg-primary/5"
+                      style={{ animationDelay: `${idx * 100}ms` }}
+                    >
+                      <span className="font-semibold">Epoch {step.epoch}</span>
+                      <div className="flex gap-6">
+                        <div className="text-right">
+                          <p className="text-[10px] text-muted-foreground">Loss</p>
+                          <p className="font-mono font-semibold">{step.loss.toFixed(3)}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] text-muted-foreground">Accuracy</p>
+                          <p className="font-mono font-semibold text-primary">{(step.accuracy * 100).toFixed(1)}%</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {completed && (
+              <div className="animate-fade-in rounded-xl border-2 border-green-500/30 bg-gradient-to-br from-green-500/10 to-green-500/5 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/20">
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-green-700 dark:text-green-300">Training Complete!</p>
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      Final accuracy: {((steps[steps.length - 1]?.accuracy || 0) * 100).toFixed(1)}%
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </Card>
       )}
     </div>

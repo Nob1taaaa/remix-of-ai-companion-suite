@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -54,15 +54,17 @@ export const PredictiveKeyboard = () => {
           placeholder="Start typing..."
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="min-h-[120px]"
+          className="min-h-[120px] transition-all duration-200 focus:ring-2 focus:ring-primary/20"
         />
       </div>
 
       <Button
         onClick={handlePredict}
         disabled={loading}
-        size="sm"
+        size="lg"
+        className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
       >
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -77,16 +79,21 @@ export const PredictiveKeyboard = () => {
       </Button>
 
       {predictions.length > 0 && (
-        <div className="animate-fade-in space-y-2">
-          <p className="text-xs font-medium text-muted-foreground">Tap to add:</p>
-          <div className="flex flex-wrap gap-2">
+        <div className="animate-fade-in space-y-3">
+          <div className="flex items-center gap-2">
+            <Zap className="h-4 w-4 text-primary" />
+            <p className="text-sm font-medium">Tap to add:</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
             {predictions.map((word, i) => (
               <button
                 key={i}
                 onClick={() => addWord(word)}
-                className="rounded-lg border bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all hover:bg-primary/20 hover:scale-105"
+                className="group relative overflow-hidden rounded-xl border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 px-5 py-3 text-sm font-semibold text-primary transition-all duration-300 hover:scale-110 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20"
+                style={{ animationDelay: `${i * 100}ms` }}
               >
-                {word}
+                <div className="absolute inset-0 bg-primary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <span className="relative">{word}</span>
               </button>
             ))}
           </div>

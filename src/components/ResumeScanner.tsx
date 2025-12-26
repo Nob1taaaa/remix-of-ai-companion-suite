@@ -98,9 +98,10 @@ export const ResumeScanner = () => {
       <Button
         onClick={handleScan}
         disabled={loading}
-        className="w-full md:w-auto"
+        className="w-full md:w-auto relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
         size="lg"
       >
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -115,60 +116,81 @@ export const ResumeScanner = () => {
       </Button>
 
       {result && (
-        <Card className="animate-fade-in space-y-6 p-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Results</h3>
-            <div className="flex items-center gap-2">
-              <span className="text-3xl font-bold text-primary">{result.score}</span>
-              <span className="text-sm text-muted-foreground">/100</span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
-                Matched Skills
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {result.matchedSkills.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="rounded-full bg-green-500/10 px-3 py-1 text-xs font-medium text-green-700 dark:text-green-300"
-                  >
-                    {skill}
-                  </span>
-                ))}
+        <Card className="animate-scale-in overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-card to-card/50 p-6 shadow-xl shadow-primary/10">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-semibold">Scan Results</h3>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                    {result.score}
+                  </p>
+                  <p className="text-xs text-muted-foreground">out of 100</p>
+                </div>
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                  <Sparkles className="h-7 w-7 text-primary" />
+                </div>
               </div>
             </div>
 
-            <div>
-              <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold">
-                <XCircle className="h-4 w-4 text-orange-500" />
-                Missing Skills
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {result.missingSkills.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-medium text-orange-700 dark:text-orange-300"
-                  >
-                    {skill}
-                  </span>
-                ))}
+            <div className="space-y-5">
+              <div>
+                <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500/20">
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  </div>
+                  Matched Skills
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {result.matchedSkills.map((skill, i) => (
+                    <span
+                      key={i}
+                      className="animate-fade-in rounded-full border border-green-500/30 bg-gradient-to-br from-green-500/20 to-green-500/10 px-4 py-2 text-xs font-medium text-green-700 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md dark:text-green-300"
+                      style={{ animationDelay: `${i * 50}ms` }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div>
-              <h4 className="mb-2 text-sm font-semibold">Feedback</h4>
-              <ul className="space-y-2">
-                {result.feedback.map((point, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary">•</span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
+              <div>
+                <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500/20">
+                    <XCircle className="h-4 w-4 text-orange-600" />
+                  </div>
+                  Missing Skills
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {result.missingSkills.map((skill, i) => (
+                    <span
+                      key={i}
+                      className="animate-fade-in rounded-full border border-orange-500/30 bg-gradient-to-br from-orange-500/20 to-orange-500/10 px-4 py-2 text-xs font-medium text-orange-700 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md dark:text-orange-300"
+                      style={{ animationDelay: `${i * 50}ms` }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="mb-3 text-sm font-semibold">Actionable Feedback</h4>
+                <ul className="space-y-3">
+                  {result.feedback.map((point, i) => (
+                    <li 
+                      key={i} 
+                      className="animate-fade-in flex gap-3 rounded-lg border border-border/50 bg-background/50 p-3 text-sm text-muted-foreground transition-all duration-300 hover:border-primary/30 hover:bg-primary/5"
+                      style={{ animationDelay: `${i * 100}ms` }}
+                    >
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                        {i + 1}
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </Card>

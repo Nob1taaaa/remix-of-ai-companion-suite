@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Bot, Loader2 } from "lucide-react";
+import { Bot, Loader2, Sparkles, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -66,11 +66,17 @@ export const MultiAgentSystem = () => {
           placeholder="Example: Create a marketing plan for a new product launch"
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          className="min-h-[100px]"
+          className="min-h-[100px] transition-all duration-200 focus:ring-2 focus:ring-primary/20"
         />
       </div>
 
-      <Button onClick={handleRun} disabled={loading} size="lg">
+      <Button 
+        onClick={handleRun} 
+        disabled={loading} 
+        size="lg"
+        className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -78,7 +84,7 @@ export const MultiAgentSystem = () => {
           </>
         ) : (
           <>
-            <Bot className="h-4 w-4" />
+            <Users className="h-4 w-4" />
             Run Multi-Agent System
           </>
         )}
@@ -86,25 +92,55 @@ export const MultiAgentSystem = () => {
 
       {result && (
         <div className="animate-fade-in space-y-4">
-          <h3 className="text-lg font-semibold">Agent Outputs</h3>
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold">Agent Collaboration</h3>
+          </div>
           
           {result.agents.map((agent, i) => (
-            <Card key={i} className="p-4 space-y-2">
-              <div className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
-                <h4 className="font-semibold">{agent.name}</h4>
+            <Card 
+              key={i} 
+              className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-card to-card/50 p-5 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:border-primary/30 hover:shadow-xl"
+              style={{ animationDelay: `${i * 150}ms` }}
+            >
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                    <Bot className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">{agent.name}</h4>
+                    <p className="text-xs text-muted-foreground">Agent {i + 1} of 3</p>
+                  </div>
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5" />
+                  <p className="relative rounded-lg bg-background/50 p-4 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                    {agent.output}
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                {agent.output}
-              </p>
             </Card>
           ))}
 
-          <Card className="border-primary/50 bg-primary/5 p-4 space-y-2">
-            <h4 className="font-semibold">Final Result</h4>
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-              {result.final}
-            </p>
+          <Card className="animate-scale-in overflow-hidden border-2 border-primary/40 bg-gradient-to-br from-primary/10 to-primary/5 p-6 shadow-xl shadow-primary/20">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold">Final Result</h4>
+                  <p className="text-xs text-muted-foreground">Synthesized by Writer Agent</p>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/10 via-primary/20 to-primary/10" />
+                <p className="relative rounded-lg bg-background/50 p-4 text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                  {result.final}
+                </p>
+              </div>
+            </div>
           </Card>
         </div>
       )}
