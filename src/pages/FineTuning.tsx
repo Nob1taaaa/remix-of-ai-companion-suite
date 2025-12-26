@@ -1,6 +1,8 @@
 import { ArrowLeft, Brain, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { FineTuningSimulator } from "@/components/FineTuningSimulator";
+import { LoRAPlayground } from "@/components/LoRAPlayground";
 
 const FineTuning = () => {
   return (
@@ -83,42 +85,30 @@ const FineTuning = () => {
             </div>
           </div>
 
-          <div className="space-y-6 rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="flex items-center gap-3">
+          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
+            <div className="mb-6 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <Brain className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold md:text-2xl">Coming Soon: Interactive Demos</h2>
-                <p className="text-sm text-muted-foreground">Fine-tuning workflows under construction</p>
+                <h2 className="text-xl font-semibold md:text-2xl">Fine-Tuning Simulator</h2>
+                <p className="text-sm text-muted-foreground">Watch a simulated training process</p>
               </div>
             </div>
+            <FineTuningSimulator />
+          </div>
 
-            <div className="rounded-xl bg-muted/50 p-6">
-              <h3 className="mb-4 font-semibold">Planned Features:</h3>
-              <ul className="space-y-3 text-sm text-muted-foreground">
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Upload custom dataset (CSV/JSON) for fine-tuning simulation</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Visual training progress with loss curves and metrics</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Compare before/after predictions from base vs fine-tuned model</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>LoRA configuration playground (rank, alpha, target modules)</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Experiment tracking dashboard with hyperparameter logs</span>
-                </li>
-              </ul>
+          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <Zap className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold md:text-2xl">LoRA Playground</h2>
+                <p className="text-sm text-muted-foreground">Configure LoRA parameters</p>
+              </div>
             </div>
+            <LoRAPlayground />
           </div>
 
           <div className="rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6">
