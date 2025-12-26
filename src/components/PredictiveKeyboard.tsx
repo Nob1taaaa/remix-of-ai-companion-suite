@@ -4,14 +4,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Loader2, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export const PredictiveKeyboard = () => {
   const [text, setText] = useState("");
   const [predictions, setPredictions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
 
   const handlePredict = async () => {
+    if (authLoading) {
+      toast({
+        title: "Loading session",
+        description: "Please wait a moment and try again.",
+      });
+      return;
+    }
+
+    if (!user) {
+      toast({
+        title: "Login required",
+        description: "Please sign in to use Predictive Keyboard.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!text.trim()) {
       toast({
         title: "Enter some text",
@@ -60,7 +79,7 @@ export const PredictiveKeyboard = () => {
 
       <Button
         onClick={handlePredict}
-        disabled={loading}
+        disabled={loading || authLoading || !user}
         size="lg"
         className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
       >
