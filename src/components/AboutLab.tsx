@@ -7,9 +7,8 @@ export const AboutLab = () => {
         <h2 className="text-xl font-semibold md:text-2xl">About this Lab</h2>
         <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
           This is a <span className="font-medium text-foreground">portfolio project</span> showcasing hands-on
-          exploration of Natural Language Processing, fine-tuning techniques, and AI agent systems. Built as a
-          learning playground to understand modern AI architectures—from basic text classification to multi-agent
-          orchestration.
+          exploration of Natural Language Processing, structured extraction, and AI agent systems. Built as a learning
+          playground to understand modern AI architectures—from basic text classification to multi-agent orchestration.
         </p>
       </div>
 
@@ -19,10 +18,10 @@ export const AboutLab = () => {
             <Lightbulb className="h-5 w-5 text-primary" />
             <h3 className="font-semibold">Why I Built This</h3>
           </div>
-          <p className="text-xs text-muted-foreground md:text-sm">
-            To understand the full stack of NLP and AI agents—from tokenization and embeddings to real-time
-            streaming assistants and fine-tuned models.
-          </p>
+        <p className="text-xs text-muted-foreground md:text-sm">
+          To understand the full stack of NLP and AI agents—from tokenization and embeddings to real-time streaming
+          assistants and structured JSON / TOON pipelines.
+        </p>
         </div>
 
         <div className="space-y-2 rounded-2xl bg-background/50 p-4">

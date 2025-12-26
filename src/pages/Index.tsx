@@ -54,7 +54,7 @@ const Index = () => {
               <span className="pill-soft inline-flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                  NLP • Fine‑tuning • Agents
+                  NLP • JSON &amp; TOON • Agents
                 </span>
               </span>
 
@@ -119,8 +119,8 @@ const Index = () => {
                     AI provider.
                   </p>
                   <p>
-                    Start simple: classification &amp; predictive text. Then layer in fine‑tuning, LoRA adapters and finally
-                    orchestrated multi‑agent systems.
+                    Start simple: classification &amp; predictive text. Then layer in structured JSON &amp; TOON extraction and
+                    finally orchestrated multi-agent systems.
                   </p>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
