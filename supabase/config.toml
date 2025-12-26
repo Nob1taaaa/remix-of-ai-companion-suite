@@ -1,4 +1,7 @@
 project_id = "sqamjfedqfdhoxdzszso"
 
+[functions.predictive-keyboard]
+verify_jwt = false
+
 [functions.multi-agent]
 verify_jwt = false
