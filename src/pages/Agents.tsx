@@ -1,6 +1,8 @@
 import { ArrowLeft, Bot, Radio } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { MultiAgentSystem } from "@/components/MultiAgentSystem";
+import { StreamingAssistant } from "@/components/StreamingAssistant";
 
 const Agents = () => {
   return (
@@ -82,42 +84,30 @@ const Agents = () => {
             </div>
           </div>
 
-          <div className="space-y-6 rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="flex items-center gap-3">
+          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
+            <div className="mb-6 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <Bot className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold md:text-2xl">Coming Soon: Interactive Demos</h2>
-                <p className="text-sm text-muted-foreground">Agent systems under construction</p>
+                <h2 className="text-xl font-semibold md:text-2xl">Multi-Agent System</h2>
+                <p className="text-sm text-muted-foreground">Planner, Researcher, and Writer collaborate</p>
               </div>
             </div>
+            <MultiAgentSystem />
+          </div>
 
-            <div className="rounded-xl bg-muted/50 p-6">
-              <h3 className="mb-4 font-semibold">Planned Features:</h3>
-              <ul className="space-y-3 text-sm text-muted-foreground">
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Multi-agent chat showing planner, researcher, and writer collaborating</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Live streaming assistant with token-by-token rendering</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Tool-calling demo: agents using search, calculator, or APIs</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Conversation state visualization: see agent memory and context</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-primary">→</span>
-                  <span>Routing logic editor: configure when to use which agent</span>
-                </li>
-              </ul>
+          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <Radio className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold md:text-2xl">Streaming Assistant</h2>
+                <p className="text-sm text-muted-foreground">Live chat with token-by-token responses</p>
+              </div>
             </div>
+            <StreamingAssistant />
           </div>
 
           <div className="rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6">

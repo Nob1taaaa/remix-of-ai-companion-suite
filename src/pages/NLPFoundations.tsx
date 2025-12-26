@@ -1,7 +1,9 @@
-import { ArrowLeft, FileText, Tag, UserCheck } from "lucide-react";
+import { ArrowLeft, FileText, Tag, UserCheck, Keyboard } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ResumeScanner } from "@/components/ResumeScanner";
+import { PredictiveKeyboard } from "@/components/PredictiveKeyboard";
+import { TextClassification } from "@/components/TextClassification";
 
 const NLPFoundations = () => {
   return (
@@ -43,31 +45,33 @@ const NLPFoundations = () => {
           </header>
 
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="space-y-3 rounded-2xl border bg-card/80 p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                <FileText className="h-5 w-5 text-primary" />
+            <div className="space-y-3 rounded-2xl border bg-primary/10 p-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
+                <Keyboard className="h-5 w-5 text-primary" />
               </div>
               <h3 className="font-semibold">Predictive Keyboard Model</h3>
               <p className="text-sm text-muted-foreground">
                 Train a tiny language model that suggests the next word as you type, like a cute mini phone keyboard.
               </p>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="rounded-full bg-muted px-2 py-1">Beginner</span>
-                <span>• Tokenization, sampling</span>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="rounded-full bg-green-500/20 px-2 py-1 font-medium text-green-700 dark:text-green-300">
+                  ✓ Live Demo Below
+                </span>
               </div>
             </div>
 
-            <div className="space-y-3 rounded-2xl border bg-card/80 p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <div className="space-y-3 rounded-2xl border bg-primary/10 p-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
                 <Tag className="h-5 w-5 text-primary" />
               </div>
               <h3 className="font-semibold">Text Classification Pipeline</h3>
               <p className="text-sm text-muted-foreground">
                 Build a full pipeline that cleans text, extracts features and classifies sentiment, topics or spam.
               </p>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="rounded-full bg-muted px-2 py-1">Beginner–Intermediate</span>
-                <span>• Embeddings</span>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="rounded-full bg-green-500/20 px-2 py-1 font-medium text-green-700 dark:text-green-300">
+                  ✓ Live Demo Below
+                </span>
               </div>
             </div>
 
@@ -85,6 +89,32 @@ const NLPFoundations = () => {
                 </span>
               </div>
             </div>
+          </div>
+
+          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <Keyboard className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold md:text-2xl">Predictive Keyboard</h2>
+                <p className="text-sm text-muted-foreground">Type to get next-word suggestions</p>
+              </div>
+            </div>
+            <PredictiveKeyboard />
+          </div>
+
+          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <Tag className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold md:text-2xl">Text Classification</h2>
+                <p className="text-sm text-muted-foreground">Classify sentiment, spam, or topics</p>
+              </div>
+            </div>
+            <TextClassification />
           </div>
 
           <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
