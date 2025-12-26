@@ -19,6 +19,7 @@ export const StructuredExtractionToneStudio = () => {
 
   const [rawText, setRawText] = useState("");
   const [result, setResult] = useState<StructuredResult | null>(null);
+  const [selectedTone, setSelectedTone] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleRun = async () => {
@@ -45,7 +46,10 @@ export const StructuredExtractionToneStudio = () => {
 
       if (error) throw error;
 
-      setResult(data || null);
+      const nextResult = data || null;
+      setResult(nextResult);
+      const firstToneKey = nextResult && Object.keys(nextResult.rewrites)[0];
+      setSelectedTone(firstToneKey || null);
       toast({
         title: "Transformation complete",
         description: "JSON extracted and tone rewrites generated.",
@@ -140,50 +144,82 @@ export const StructuredExtractionToneStudio = () => {
       </div>
 
       {result && (
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
-            <div className="space-y-3">
-              <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
-                <Braces className="h-4 w-4 text-primary" />
-                Extracted JSON
-              </h3>
-              <pre className="max-h-72 overflow-auto rounded-xl bg-muted/70 p-4 text-xs leading-relaxed text-muted-foreground">
-                {JSON.stringify(result.extracted, null, 2)}
-              </pre>
-              <p className="text-[11px] text-muted-foreground/80">
-                Use this shape as input to backends, databases, or other tools. Fields that can&apos;t be found should be
-                left empty, not invented.
-              </p>
-            </div>
-          </Card>
-
-          <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
-            <div className="space-y-4">
-              <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
-                <Wand2 className="h-4 w-4 text-primary" />
-                Tone rewrites
-              </h3>
-              <div className="space-y-3 max-h-72 overflow-auto pr-1">
-                {Object.entries(result.rewrites).map(([tone, text]) => (
-                  <div
-                    key={tone}
-                    className="rounded-2xl border border-border/60 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground"
-                  >
-                    <div className="mb-1 flex items-center justify-between">
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
-                        {tone}
-                      </span>
-                    </div>
-                    <p className="whitespace-pre-line">{text}</p>
-                  </div>
-                ))}
+        <div className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
+              <div className="space-y-3">
+                <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
+                  <Braces className="h-4 w-4 text-primary" />
+                  Extracted JSON
+                </h3>
+                <pre className="max-h-72 overflow-auto rounded-xl bg-muted/70 p-4 text-xs leading-relaxed text-muted-foreground">
+                  {JSON.stringify(result.extracted, null, 2)}
+                </pre>
+                <p className="text-[11px] text-muted-foreground/80">
+                  Use this shape as input to backends, databases, or other tools. Fields that can&apos;t be found should be
+                  left empty, not invented.
+                </p>
               </div>
-              <p className="text-[11px] text-muted-foreground/80">
-                Great for comparing how a recruiter email vs. a friendly DM vs. a formal cover letter all sound using the
-                same underlying content.
-              </p>
-            </div>
-          </Card>
+            </Card>
+
+            <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
+                  <Wand2 className="h-4 w-4 text-primary" />
+                  Tone rewrites
+                </h3>
+                <div className="space-y-3 max-h-72 overflow-auto pr-1">
+                  {Object.entries(result.rewrites).map(([tone, text]) => (
+                    <div
+                      key={tone}
+                      className="rounded-2xl border border-border/60 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground"
+                      onClick={() => setSelectedTone(tone)}
+                    >
+                      <div className="mb-1 flex items-center justify-between">
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+                          {tone}
+                        </span>
+                        {selectedTone === tone && (
+                          <span className="text-[10px] font-medium text-primary">Selected for compare</span>
+                        )}
+                      </div>
+                      <p className="whitespace-pre-line">{text}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-muted-foreground/80">
+                  Tap a tone to mark it for the side-by-side comparison view below.
+                </p>
+              </div>
+            </Card>
+          </div>
+
+          {selectedTone && result.rewrites[selectedTone] && (
+            <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-card to-card/70 p-6 shadow-xl shadow-primary/10">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h3 className="text-sm font-semibold md:text-base">Original vs. {selectedTone} tone</h3>
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-medium text-primary">
+                  Side-by-side compare
+                </span>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Original text</p>
+                  <div className="max-h-56 overflow-auto rounded-2xl border border-border/60 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground">
+                    <p className="whitespace-pre-line">{rawText}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    {selectedTone} rewrite
+                  </p>
+                  <div className="max-h-56 overflow-auto rounded-2xl border border-border/60 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground">
+                    <p className="whitespace-pre-line">{result.rewrites[selectedTone]}</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
         </div>
       )}
     </section>
