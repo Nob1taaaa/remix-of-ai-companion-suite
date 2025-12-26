@@ -14,6 +14,9 @@ interface ClassificationResult {
   explanation: string;
 }
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+
 export const TextClassification = () => {
   const [text, setText] = useState("");
   const [category, setCategory] = useState("sentiment");
@@ -36,11 +39,23 @@ export const TextClassification = () => {
     setResult(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('classify-text', {
-        body: { text, category }
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/classify-text`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ text, category }),
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Classification HTTP error:", response.status, errorText);
+        throw new Error("Classification request failed");
+      }
+
+      const data: ClassificationResult = await response.json();
       setResult(data);
 
       // Save to history for logged-in users
@@ -52,10 +67,10 @@ export const TextClassification = () => {
           confidence: data?.confidence,
           raw_result: data,
           user_id: user.id,
-        });
+        } as any);
       }
     } catch (error: any) {
-      console.error('Classification error:', error);
+      console.error("Classification error:", error);
       toast({
         title: "Classification failed",
         description: error.message || "Failed to classify text",
@@ -68,10 +83,14 @@ export const TextClassification = () => {
 
   const getCategoryIcon = () => {
     switch (category) {
-      case 'sentiment': return <TrendingUp className="h-4 w-4" />;
-      case 'spam': return <Shield className="h-4 w-4" />;
-      case 'topic': return <Layers className="h-4 w-4" />;
-      default: return <Tag className="h-4 w-4" />;
+      case "sentiment":
+        return <TrendingUp className="h-4 w-4" />;
+      case "spam":
+        return <Shield className="h-4 w-4" />;
+      case "topic":
+        return <Layers className="h-4 w-4" />;
+      default:
+        return <Tag className="h-4 w-4" />;
     }
   };
 
@@ -118,8 +137,8 @@ export const TextClassification = () => {
         </div>
       </div>
 
-      <Button 
-        onClick={handleClassify} 
+      <Button
+        onClick={handleClassify}
         disabled={loading}
         size="lg"
         className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
