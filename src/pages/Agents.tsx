@@ -54,7 +54,7 @@ const Agents = () => {
             </div>
           </header>
 
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="hidden gap-8 md:grid md:grid-cols-2">
             <div className="space-y-4 rounded-2xl border bg-card/80 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <Bot className="h-6 w-6 text-primary" />
@@ -141,7 +141,7 @@ const Agents = () => {
             </Suspense>
           </div>
 
-          <div className="rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6">
+          <div className="hidden rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6 md:block">
             <h3 className="mb-3 font-semibold">What You'll Learn</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex gap-2">

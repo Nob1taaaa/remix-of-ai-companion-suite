@@ -49,7 +49,7 @@ const FineTuning = () => {
             </div>
           </header>
 
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="hidden gap-8 md:grid md:grid-cols-2">
             <div className="space-y-4 rounded-2xl border bg-card/80 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <Braces className="h-6 w-6 text-primary" />
