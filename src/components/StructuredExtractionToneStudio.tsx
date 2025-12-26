@@ -8,18 +8,14 @@ import { Braces, Wand2, Sparkles, Loader2 } from "lucide-react";
 
 interface StructuredResult {
   extracted: Record<string, string>;
-  rewrites: Record<string, string>;
+  toon: string;
 }
-
-const DEFAULT_FIELDS = ["name", "email", "role", "company", "skills", "location"];
-const DEFAULT_TONES = ["formal", "casual", "recruiter", "friendly"];
 
 export const StructuredExtractionToneStudio = () => {
   const { toast } = useToast();
 
   const [rawText, setRawText] = useState("");
   const [result, setResult] = useState<StructuredResult | null>(null);
-  const [selectedTone, setSelectedTone] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleRun = async () => {
@@ -37,22 +33,15 @@ export const StructuredExtractionToneStudio = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke<StructuredResult>("structured-studio", {
-        body: {
-          text: rawText,
-          fields: DEFAULT_FIELDS,
-          tones: DEFAULT_TONES,
-        },
+        body: { text: rawText },
       });
 
       if (error) throw error;
 
-      const nextResult = data || null;
-      setResult(nextResult);
-      const firstToneKey = nextResult && Object.keys(nextResult.rewrites)[0];
-      setSelectedTone(firstToneKey || null);
+      setResult(data || null);
       toast({
         title: "Transformation complete",
-        description: "JSON extracted and tone rewrites generated.",
+        description: "JSON and TOON views generated from your text.",
       });
     } catch (err: any) {
       console.error("Structured studio error", err);
@@ -103,7 +92,7 @@ export const StructuredExtractionToneStudio = () => {
             ) : (
               <>
                 <Wand2 className="h-4 w-4" />
-                Extract JSON &amp; cute tones
+                Extract JSON &amp; TOON
               </>
             )}
           </Button>
@@ -117,8 +106,7 @@ export const StructuredExtractionToneStudio = () => {
             <div>
               <h2 className="text-base font-semibold md:text-lg">Why this matters</h2>
               <p className="text-xs text-muted-foreground md:text-sm">
-                Real apps rarely store free text. They extract clean JSON for backends and shape tone for different
-                audiences.
+                Real apps often need both a clean JSON object for backends and a compact token-style format for models.
               </p>
             </div>
           </div>
@@ -126,100 +114,45 @@ export const StructuredExtractionToneStudio = () => {
           <ul className="space-y-2 text-xs text-muted-foreground md:text-sm">
             <li className="flex gap-2">
               <span className="text-primary">•</span>
-              <span>Turn unstructured text into tidy JSON objects you can save in databases or use in APIs.</span>
+              <span>Turn unstructured text into tidy JSON objects you can save or pipe into APIs.</span>
             </li>
             <li className="flex gap-2">
               <span className="text-primary">•</span>
-              <span>
-                Compare how the exact same content feels in different tones — helpful for UX writing, recruiters, or
-                support.
-              </span>
+              <span>See a TOON view that is compact and token-friendly for LLM prompts.</span>
             </li>
             <li className="flex gap-2">
               <span className="text-primary">•</span>
-              <span>Spot hallucinations: the JSON should never invent fields that aren&apos;t present in the input.</span>
+              <span>Only fields truly present in the input are extracted; nothing is invented.</span>
             </li>
           </ul>
         </Card>
       </div>
 
       {result && (
-        <div className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
-              <div className="space-y-3">
-                <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
-                  <Braces className="h-4 w-4 text-primary" />
-                  Extracted JSON
-                </h3>
-                <pre className="max-h-72 overflow-auto rounded-xl bg-muted/70 p-4 text-xs leading-relaxed text-muted-foreground">
-                  {JSON.stringify(result.extracted, null, 2)}
-                </pre>
-                <p className="text-[11px] text-muted-foreground/80">
-                  Use this shape as input to backends, databases, or other tools. Fields that can&apos;t be found should be
-                  left empty, not invented.
-                </p>
-              </div>
-            </Card>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
+            <div className="space-y-3">
+              <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
+                <Braces className="h-4 w-4 text-primary" />
+                JSON view
+              </h3>
+              <pre className="max-h-72 overflow-auto rounded-xl bg-muted/70 p-4 text-xs leading-relaxed text-muted-foreground">
+                {JSON.stringify(result.extracted, null, 2)}
+              </pre>
+            </div>
+          </Card>
 
-            <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
-              <div className="space-y-4">
-                <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
-                  <Wand2 className="h-4 w-4 text-primary" />
-                  Tone rewrites
-                </h3>
-                <div className="space-y-3 max-h-72 overflow-auto pr-1">
-                  {Object.entries(result.rewrites).map(([tone, text]) => (
-                    <div
-                      key={tone}
-                      className="rounded-2xl border border-border/60 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground"
-                      onClick={() => setSelectedTone(tone)}
-                    >
-                      <div className="mb-1 flex items-center justify-between">
-                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
-                          {tone}
-                        </span>
-                        {selectedTone === tone && (
-                          <span className="text-[10px] font-medium text-primary">Selected for compare</span>
-                        )}
-                      </div>
-                      <p className="whitespace-pre-line">{text}</p>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-[11px] text-muted-foreground/80">
-                  Tap a tone to mark it for the side-by-side comparison view below.
-                </p>
+          <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
+            <div className="space-y-3">
+              <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
+                <Wand2 className="h-4 w-4 text-primary" />
+                TOON view
+              </h3>
+              <div className="max-h-72 overflow-auto rounded-xl bg-muted/70 p-4 text-xs leading-relaxed text-muted-foreground">
+                <p className="whitespace-pre-line">{result.toon}</p>
               </div>
-            </Card>
-          </div>
-
-          {selectedTone && result.rewrites[selectedTone] && (
-            <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-card to-card/70 p-6 shadow-xl shadow-primary/10">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <h3 className="text-sm font-semibold md:text-base">Original vs. {selectedTone} tone</h3>
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-medium text-primary">
-                  Side-by-side compare
-                </span>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Original text</p>
-                  <div className="max-h-56 overflow-auto rounded-2xl border border-border/60 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground">
-                    <p className="whitespace-pre-line">{rawText}</p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                    {selectedTone} rewrite
-                  </p>
-                  <div className="max-h-56 overflow-auto rounded-2xl border border-border/60 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground">
-                    <p className="whitespace-pre-line">{result.rewrites[selectedTone]}</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          )}
+            </div>
+          </Card>
         </div>
       )}
     </section>

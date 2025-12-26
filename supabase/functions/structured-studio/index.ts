@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, fields, tones } = await req.json();
+    const { text } = await req.json();
 
     if (!text) {
       return new Response(
@@ -20,30 +20,28 @@ serve(async (req) => {
       );
     }
 
-    const effectiveFields = Array.isArray(fields) && fields.length > 0
-      ? fields
-      : ["name", "email", "role", "company", "skills", "location", "experience", "summary"];
-
-    const effectiveTones = Array.isArray(tones) && tones.length > 0
-      ? tones
-      : ["formal", "casual", "recruiter", "friendly"];
-
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are a structured extraction and tone rewriting assistant.
+    const systemPrompt = `You are a structured extraction assistant.
 
-1. NEVER hallucinate: if an input field cannot be found explicitly in the text, set its value to an empty string.
-2. For the JSON extraction, only use keys from the provided field list.
-3. For tone rewrites, preserve factual content but adjust style.
-4. Keep all outputs concise and usable in real applications.
+Rules:
+1. ONLY extract fields that are clearly and explicitly present in the text (like name, email, role, etc.).
+2. NEVER invent keys such as skills or location if they do not appear.
+3. Do not add keys with empty strings. If something is not present, simply omit that key.
+4. In addition to JSON, also return a compact TOON (Token Object Oriented Notation) view.
+
+TOON format definition:
+- Single line or short multi-line.
+- Each key is written as key=value, separated by semicolons.
+- Example: name=harshit shah; role=computer science student
 
 Return ONLY valid JSON with this exact shape and nothing else:
 {
   "extracted": { "field": "value", ... },
-  "rewrites": { "tone": "text", ... }
+  "toon": "key1=value1; key2=value2"
 }`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -56,10 +54,7 @@ Return ONLY valid JSON with this exact shape and nothing else:
         model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
-          {
-            role: "user",
-            content: `FIELDS: ${effectiveFields.join(", ")}\nTONES: ${effectiveTones.join(", ")}\n\nTEXT:\n${text}`,
-          },
+          { role: "user", content: text },
         ],
       }),
     });
@@ -92,17 +87,14 @@ Return ONLY valid JSON with this exact shape and nothing else:
 
     let parsed;
     try {
-      // Try to parse full content first
       parsed = JSON.parse(content);
     } catch (e) {
-      // Fallback: try to extract the first JSON object substring
       const firstBrace = content.indexOf("{");
       const lastBrace = content.lastIndexOf("}");
       if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
         console.error("Failed to locate JSON object in AI response", content);
         throw new Error("AI did not return valid JSON");
       }
-
       const jsonSlice = content.slice(firstBrace, lastBrace + 1);
       try {
         parsed = JSON.parse(jsonSlice);
@@ -113,10 +105,10 @@ Return ONLY valid JSON with this exact shape and nothing else:
     }
 
     const safeExtracted = parsed.extracted && typeof parsed.extracted === "object" ? parsed.extracted : {};
-    const safeRewrites = parsed.rewrites && typeof parsed.rewrites === "object" ? parsed.rewrites : {};
+    const safeToon = typeof parsed.toon === "string" ? parsed.toon : "";
 
     return new Response(
-      JSON.stringify({ extracted: safeExtracted, rewrites: safeRewrites }),
+      JSON.stringify({ extracted: safeExtracted, toon: safeToon }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
