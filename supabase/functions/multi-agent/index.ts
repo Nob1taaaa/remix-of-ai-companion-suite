@@ -6,6 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_TASK_LENGTH = 5000; // 5K chars for task description
+
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
@@ -61,12 +63,20 @@ serve(async (req) => {
       );
     }
 
+    // Input validation: limit task length
+    if (task.length > MAX_TASK_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Task too long. Maximum ${MAX_TASK_LENGTH} characters allowed.` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    console.log('Starting multi-agent task:', task);
+    console.log('Starting multi-agent task:', task.substring(0, 100));
 
     // Agent 1: Planner
     const plannerResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

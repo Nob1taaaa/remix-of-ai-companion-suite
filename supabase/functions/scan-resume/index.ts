@@ -6,6 +6,9 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_RESUME_LENGTH = 50000; // 50K chars for resume
+const MAX_JOB_DESCRIPTION_LENGTH = 20000; // 20K chars for job description
+
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
@@ -57,6 +60,22 @@ serve(async (req) => {
     if (!resumeText || !jobDescription) {
       return new Response(
         JSON.stringify({ error: 'Resume text and job description are required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Input validation: limit resume length
+    if (resumeText.length > MAX_RESUME_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Resume too long. Maximum ${MAX_RESUME_LENGTH} characters allowed.` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Input validation: limit job description length
+    if (jobDescription.length > MAX_JOB_DESCRIPTION_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Job description too long. Maximum ${MAX_JOB_DESCRIPTION_LENGTH} characters allowed.` }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
