@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.scan-resume]
 verify_jwt = false
+
+[functions.rag-qa]
+verify_jwt = false

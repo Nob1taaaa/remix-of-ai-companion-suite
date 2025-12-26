@@ -1,8 +1,7 @@
-import { ArrowLeft, Brain, Zap } from "lucide-react";
+import { ArrowLeft, FileSearch, BookOpen } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { FineTuningSimulator } from "@/components/FineTuningSimulator";
-import { LoRAPlayground } from "@/components/LoRAPlayground";
+import { RagDocumentQA } from "@/components/RagDocumentQA";
 import { useAuth } from "@/hooks/useAuth";
 
 const FineTuning = () => {
@@ -29,20 +28,19 @@ const FineTuning = () => {
 
           <header className="space-y-6 animate-enter">
             <span className="pill-soft inline-flex items-center gap-2">
-              <Brain className="h-4 w-4 text-primary" />
+              <FileSearch className="h-4 w-4 text-primary" />
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                LLM • Fine-tuning
+                NLP • Retrieval-Augmented Generation
               </span>
             </span>
 
             <div className="space-y-4">
               <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl">
-                Fine-tuning Studio (LLM + LoRA)
+                RAG / Document Q&amp;A Studio
               </h1>
               <p className="max-w-2xl text-balance text-sm text-muted-foreground md:text-base">
-                Learn to adapt foundation models to your own data using supervised fine-tuning and parameter-efficient
-                methods like LoRA. Understand the training loop, evaluation metrics, and experiment tracking for
-                production-ready models.
+                Upload real artifacts like course notes, job descriptions, or product docs, then ask grounded questions
+                that must be answered using your sources—not model imagination.
               </p>
             </div>
           </header>
@@ -50,93 +48,66 @@ const FineTuning = () => {
           <div className="grid gap-8 md:grid-cols-2">
             <div className="space-y-4 rounded-2xl border bg-card/80 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Brain className="h-6 w-6 text-primary" />
+                <BookOpen className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold">Fine-tune LLM on Your Data</h3>
+              <h3 className="text-lg font-semibold">Grounded document question-answering</h3>
               <p className="text-sm text-muted-foreground">
-                Adapt a base model to your own Q&A or support data so it talks like your project or brand. Master
-                prompt formats, training-eval loops, and hyperparameter tuning.
+                Practice retrieval-augmented generation (RAG) by forcing the model to answer questions using only the
+                content you provide: notes, specs, or job descriptions.
               </p>
               <div className="space-y-2">
                 <div className="text-xs font-semibold text-muted-foreground">Key Concepts:</div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="pill-soft text-[11px]">Dataset preparation</span>
-                  <span className="pill-soft text-[11px]">Training loop</span>
-                  <span className="pill-soft text-[11px]">Evaluation metrics</span>
-                  <span className="pill-soft text-[11px]">Loss curves</span>
+                  <span className="pill-soft text-[11px]">Retrieval vs. recall</span>
+                  <span className="pill-soft text-[11px]">Grounded answers</span>
+                  <span className="pill-soft text-[11px]">Hallucination control</span>
+                  <span className="pill-soft text-[11px]">Document QA</span>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4 rounded-2xl border bg-card/80 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Zap className="h-6 w-6 text-primary" />
+                <FileSearch className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold">LoRA Fine-tuning Playground</h3>
+              <h3 className="text-lg font-semibold">Text, PDF, &amp; image inputs</h3>
               <p className="text-sm text-muted-foreground">
-                Use parameter-efficient LoRA adapters to teach an LLM a new style or domain on a budget. Understand
-                rank, alpha, dropout, and how to merge adapters for deployment.
+                Upload plain text, parse PDFs into text, or point the model at images (like slide screenshots) and see
+                how well it can ground its answers directly in your artifacts.
               </p>
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground">Key Concepts:</div>
+                <div className="text-xs font-semibold text-muted-foreground">Great practice for:</div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="pill-soft text-[11px]">LoRA rank & alpha</span>
-                  <span className="pill-soft text-[11px]">PEFT adapters</span>
-                  <span className="pill-soft text-[11px]">Memory efficiency</span>
-                  <span className="pill-soft text-[11px]">Adapter merging</span>
+                  <span className="pill-soft text-[11px]">Course &amp; exam prep</span>
+                  <span className="pill-soft text-[11px]">Job search &amp; resumes</span>
+                  <span className="pill-soft text-[11px]">Product &amp; API docs</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <Brain className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold md:text-2xl">Fine-Tuning Simulator</h2>
-                <p className="text-sm text-muted-foreground">Watch a simulated training process</p>
-              </div>
-            </div>
-            <FineTuningSimulator />
-          </div>
-
-          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <Zap className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold md:text-2xl">LoRA Playground</h2>
-                <p className="text-sm text-muted-foreground">Configure LoRA parameters</p>
-              </div>
-            </div>
-            <LoRAPlayground />
+            <RagDocumentQA />
           </div>
 
           <div className="rounded-2xl border-l-4 border-primary/50 bg-primary/5 p-6">
-            <h3 className="mb-3 font-semibold">What You'll Learn</h3>
+            <h3 className="mb-3 font-semibold">What you&apos;ll learn here</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>Supervised fine-tuning workflow from data prep to deployment</span>
+                <span>How RAG differs from pure prompting and fine-tuning.</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>Parameter-efficient fine-tuning (PEFT) with LoRA and adapters</span>
+                <span>Why grounding answers in explicit sources reduces hallucinations.</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>Training hyperparameters: learning rate, batch size, epochs</span>
+                <span>Trade-offs of text, PDFs, and images as knowledge sources.</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary">•</span>
-                <span>Evaluation metrics and preventing overfitting</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-primary">•</span>
-                <span>Cost-effective training strategies for resource-constrained environments</span>
+                <span>How to design prompts that demand citations and quoted evidence.</span>
               </li>
             </ul>
           </div>
