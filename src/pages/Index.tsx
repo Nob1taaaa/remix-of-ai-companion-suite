@@ -1,5 +1,6 @@
 import { Sparkles, Bot, Layers3, RadioTower } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ResumeScanner } from "@/components/ResumeScanner";
 
 const projects = [
   {
@@ -152,6 +153,10 @@ const Index = () => {
                 </article>
               ))}
             </div>
+          </section>
+
+          <section className="animate-fade-in rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8" style={{ animationDelay: '0.2s' }}>
+            <ResumeScanner />
           </section>
         </div>
       </div>
