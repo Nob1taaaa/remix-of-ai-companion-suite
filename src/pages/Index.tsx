@@ -18,12 +18,12 @@ const projects = [
   },
   {
     id: 2,
-    title: "Structured Extraction & Tone Studio",
+    title: "Structured JSON & TOON Studio",
     tag: "LLM • Structured output",
     difficulty: "Intermediate–Advanced",
     description:
-      "Paste messy text, extract clean JSON fields, and compare tone rewrites for real-world UX and data pipelines.",
-    focus: "Text → JSON, tone control",
+      "Turn messy profiles, resumes, or notes into clean JSON plus a compact TOON line — no fake fields, only what\'s in the text.",
+    focus: "Text → JSON, TOON format",
     path: "/fine-tuning",
   },
   {
