@@ -1,10 +1,14 @@
 import { ArrowLeft, Brain, Zap } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FineTuningSimulator } from "@/components/FineTuningSimulator";
 import { LoRAPlayground } from "@/components/LoRAPlayground";
+import { useAuth } from "@/hooks/useAuth";
 
 const FineTuning = () => {
+  const { user, loading } = useAuth();
+  if (!loading && !user) return <Navigate to="/auth" replace />;
+
   return (
     <main className="min-h-screen">
       <div className="relative overflow-hidden">

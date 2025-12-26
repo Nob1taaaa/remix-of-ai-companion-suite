@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ResumeScanner } from "@/components/ResumeScanner";
 import { AboutLab } from "@/components/AboutLab";
+import { useAuth } from "@/hooks/useAuth";
 
 const projects = [
   {
@@ -38,6 +39,7 @@ const projects = [
 ];
 
 const Index = () => {
+  const { user } = useAuth();
   return (
     <main className="min-h-screen">
       <div className="relative overflow-hidden">
@@ -67,10 +69,12 @@ const Index = () => {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="hero" className="hover-scale">
-                  <Bot className="h-4 w-4" />
-                  Start exploring projects
-                </Button>
+                <Link to={user ? "/my-lab" : "/auth"}>
+                  <Button variant="hero" className="hover-scale">
+                    <Bot className="h-4 w-4" />
+                    {user ? "Go to My Lab" : "Sign in to start"}
+                  </Button>
+                </Link>
                 <button className="story-link text-sm font-medium text-muted-foreground">
                   <span>View suggested learning path</span>
                 </button>
