@@ -20,13 +20,13 @@ async function authenticateUser(req: Request): Promise<{ user: any; error: Respo
     };
   }
 
-  const supabaseClient = createClient(
+  const supabaseAdmin = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-    { global: { headers: { Authorization: authHeader } } }
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
   );
 
-  const { data: { user }, error } = await supabaseClient.auth.getUser();
+  const token = authHeader.replace('Bearer ', '');
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
   
   if (error || !user) {
     console.error('Auth error:', error?.message);
