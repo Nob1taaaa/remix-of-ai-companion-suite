@@ -40,6 +40,9 @@ export const StructuredExtractionToneStudio = () => {
       if (error) throw error;
 
       setResult(data || null);
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
       toast({
         title: "Transformation complete",
         description: "JSON and TOON views generated from your text.",
