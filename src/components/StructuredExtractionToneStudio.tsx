@@ -133,7 +133,7 @@ export const StructuredExtractionToneStudio = () => {
       </div>
 
       {result && (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div ref={resultRef} className="grid gap-6 md:grid-cols-2">
           <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
             <div className="space-y-3">
               <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
