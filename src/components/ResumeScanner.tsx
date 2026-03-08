@@ -108,11 +108,20 @@ export const ResumeScanner = () => {
             className="min-h-[200px] resize-none"
           />
           <div className="space-y-1 pt-2">
-            <label className="text-xs font-medium text-muted-foreground">Upload resume (.txt or .pdf)</label>
+            <label className="text-xs font-medium text-muted-foreground">
+              {pdfLoading ? "Extracting text from PDF…" : "Upload resume (.txt or .pdf)"}
+            </label>
+            {pdfLoading && (
+              <div className="flex items-center gap-2 text-xs text-primary">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span>Using AI to extract text from your PDF…</span>
+              </div>
+            )}
             <input
               type="file"
               accept=".txt,text/plain,application/pdf,.pdf"
-              className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-foreground hover:file:bg-accent/20"
+              disabled={pdfLoading}
+              className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-foreground hover:file:bg-accent/20 disabled:opacity-50"
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
