@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,7 @@ export const StructuredExtractionToneStudio = () => {
   const [rawText, setRawText] = useState("");
   const [result, setResult] = useState<StructuredResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const handleRun = async () => {
     if (!rawText.trim()) {
@@ -39,6 +40,9 @@ export const StructuredExtractionToneStudio = () => {
       if (error) throw error;
 
       setResult(data || null);
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
       toast({
         title: "Transformation complete",
         description: "JSON and TOON views generated from your text.",
@@ -129,7 +133,7 @@ export const StructuredExtractionToneStudio = () => {
       </div>
 
       {result && (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div ref={resultRef} className="grid gap-6 md:grid-cols-2">
           <Card className="animate-scale-in overflow-hidden rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/60 p-6 shadow-xl shadow-primary/10">
             <div className="space-y-3">
               <h3 className="flex items-center gap-2 text-sm font-semibold md:text-base">
