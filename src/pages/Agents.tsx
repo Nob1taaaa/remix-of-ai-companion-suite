@@ -25,7 +25,7 @@ const Agents = () => {
           <div className="absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-primary/40 blur-3xl" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-6xl space-y-12 px-6 pb-16 pt-12 md:px-8 md:pt-16">
+        <div className="relative z-10 mx-auto max-w-6xl space-y-6 px-4 pb-10 pt-6 md:space-y-12 md:px-8 md:pb-16 md:pt-16">
           <div className="flex items-center gap-4">
             <Link to="/">
               <Button variant="ghost" size="sm">
@@ -35,7 +35,7 @@ const Agents = () => {
             </Link>
           </div>
 
-          <header className="space-y-6 animate-enter">
+          <header className="space-y-3 animate-enter md:space-y-6">
             <span className="pill-soft inline-flex items-center gap-2">
               <Bot className="h-4 w-4 text-primary" />
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -43,13 +43,12 @@ const Agents = () => {
               </span>
             </span>
 
-            <div className="space-y-4">
-              <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl">
+            <div className="space-y-2 md:space-y-4">
+              <h1 className="text-balance text-2xl font-semibold leading-tight md:text-5xl">
                 AI Agents & Real-time Assistants
               </h1>
-              <p className="max-w-2xl text-balance text-sm text-muted-foreground md:text-base">
-                Design collaborative multi-agent systems and build responsive streaming assistants. Learn orchestration
-                patterns, tool use, routing logic, and how to create conversational UX that feels fast and natural.
+              <p className="max-w-2xl text-balance text-xs text-muted-foreground md:text-base">
+                Design collaborative multi-agent systems and build responsive streaming assistants.
               </p>
             </div>
           </header>
@@ -96,14 +95,14 @@ const Agents = () => {
             </div>
           </div>
 
-          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <Bot className="h-5 w-5" />
+          <div className="rounded-2xl border bg-card/80 p-4 shadow-sm md:rounded-3xl md:p-8">
+            <div className="mb-4 flex items-center gap-3 md:mb-6">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary md:h-10 md:w-10 md:rounded-2xl">
+                <Bot className="h-4 w-4 md:h-5 md:w-5" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold md:text-2xl">Multi-Agent System</h2>
-                <p className="text-sm text-muted-foreground">Planner, Researcher, and Writer collaborate</p>
+                <h2 className="text-base font-semibold md:text-2xl">Multi-Agent System</h2>
+                <p className="text-xs text-muted-foreground md:text-sm">Planner, Researcher, and Writer collaborate</p>
               </div>
             </div>
             <Suspense
@@ -119,14 +118,14 @@ const Agents = () => {
             </Suspense>
           </div>
 
-          <div className="rounded-3xl border bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <Radio className="h-5 w-5" />
+          <div className="rounded-2xl border bg-card/80 p-4 shadow-sm md:rounded-3xl md:p-8">
+            <div className="mb-4 flex items-center gap-3 md:mb-6">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary md:h-10 md:w-10 md:rounded-2xl">
+                <Radio className="h-4 w-4 md:h-5 md:w-5" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold md:text-2xl">Streaming Assistant</h2>
-                <p className="text-sm text-muted-foreground">Live chat with token-by-token responses</p>
+                <h2 className="text-base font-semibold md:text-2xl">Streaming Assistant</h2>
+                <p className="text-xs text-muted-foreground md:text-sm">Live chat with token-by-token responses</p>
               </div>
             </div>
             <Suspense
