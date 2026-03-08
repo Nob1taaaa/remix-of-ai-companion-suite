@@ -6,7 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const MAX_TASK_LENGTH = 5000; // 5K chars for task description
+const MAX_TASK_LENGTH = 5000;
+const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
   const authHeader = req.headers.get('Authorization');
@@ -42,12 +43,37 @@ async function authenticateUser(req: Request): Promise<{ user: any; error: Respo
   return { user, error: null };
 }
 
+async function callClaude(apiKey: string, systemPrompt: string, userMessage: string): Promise<string> {
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1024,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userMessage }],
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Anthropic API error:', response.status, errorText);
+    throw new Error(`Anthropic API error (${response.status})`);
+  }
+
+  const data = await response.json();
+  return data.content[0].text;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Authenticate user
   const { user, error: authError } = await authenticateUser(req);
   if (authError) return authError;
 
@@ -63,7 +89,6 @@ serve(async (req) => {
       );
     }
 
-    // Input validation: limit task length
     if (task.length > MAX_TASK_LENGTH) {
       return new Response(
         JSON.stringify({ error: `Task too long. Maximum ${MAX_TASK_LENGTH} characters allowed.` }),
@@ -71,90 +96,33 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
+    if (!ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY is not configured');
     }
 
     console.log('Starting multi-agent task:', task.substring(0, 100));
 
     // Agent 1: Planner
-    const plannerResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a Planner agent. Break down user tasks into clear steps. Be concise.'
-          },
-          {
-            role: 'user',
-            content: task
-          }
-        ]
-      }),
-    });
-
-    if (!plannerResponse.ok) throw new Error('Planner failed');
-    const plannerData = await plannerResponse.json();
-    const plan = plannerData.choices[0].message.content;
+    const plan = await callClaude(
+      ANTHROPIC_API_KEY,
+      'You are a Planner agent. Break down user tasks into clear steps. Be concise.',
+      task
+    );
 
     // Agent 2: Researcher
-    const researcherResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a Researcher agent. Provide key information and insights for the plan. Be factual and concise.'
-          },
-          {
-            role: 'user',
-            content: `Plan: ${plan}\n\nProvide relevant information to execute this plan.`
-          }
-        ]
-      }),
-    });
-
-    if (!researcherResponse.ok) throw new Error('Researcher failed');
-    const researcherData = await researcherResponse.json();
-    const research = researcherData.choices[0].message.content;
+    const research = await callClaude(
+      ANTHROPIC_API_KEY,
+      'You are a Researcher agent. Provide key information and insights for the plan. Be factual and concise.',
+      `Plan: ${plan}\n\nProvide relevant information to execute this plan.`
+    );
 
     // Agent 3: Writer
-    const writerResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a Writer agent. Synthesize the plan and research into a clear, actionable response.'
-          },
-          {
-            role: 'user',
-            content: `Task: ${task}\n\nPlan: ${plan}\n\nResearch: ${research}\n\nWrite a final response.`
-          }
-        ]
-      }),
-    });
-
-    if (!writerResponse.ok) throw new Error('Writer failed');
-    const writerData = await writerResponse.json();
-    const final = writerData.choices[0].message.content;
+    const final = await callClaude(
+      ANTHROPIC_API_KEY,
+      'You are a Writer agent. Synthesize the plan and research into a clear, actionable response.',
+      `Task: ${task}\n\nPlan: ${plan}\n\nResearch: ${research}\n\nWrite a final response.`
+    );
 
     return new Response(
       JSON.stringify({
