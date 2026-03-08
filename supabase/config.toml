@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.structured-studio]
 verify_jwt = false
+
+[functions.extract-pdf]
+verify_jwt = false

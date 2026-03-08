@@ -7,12 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-// Lazy import type for pdfjs to avoid hard module requirement in type system
-type PdfJsLib = typeof import("pdfjs-dist/types/src/pdf") & {
-  GlobalWorkerOptions: { workerSrc: string };
-  getDocument: (src: any) => { promise: Promise<any> };
-};
-
 interface ScanResult {
   score: number;
   feedback: string[];
@@ -24,6 +18,7 @@ export const ResumeScanner = () => {
   const [resumeText, setResumeText] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
@@ -113,11 +108,20 @@ export const ResumeScanner = () => {
             className="min-h-[200px] resize-none"
           />
           <div className="space-y-1 pt-2">
-            <label className="text-xs font-medium text-muted-foreground">Upload resume (.txt or .pdf)</label>
+            <label className="text-xs font-medium text-muted-foreground">
+              {pdfLoading ? "Extracting text from PDF…" : "Upload resume (.txt or .pdf)"}
+            </label>
+            {pdfLoading && (
+              <div className="flex items-center gap-2 text-xs text-primary">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span>Using AI to extract text from your PDF…</span>
+              </div>
+            )}
             <input
               type="file"
               accept=".txt,text/plain,application/pdf,.pdf"
-              className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-foreground hover:file:bg-accent/20"
+              disabled={pdfLoading}
+              className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border file:border-border file:bg-background file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-foreground hover:file:bg-accent/20 disabled:opacity-50"
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
@@ -128,28 +132,30 @@ export const ResumeScanner = () => {
                   let text = "";
 
                   if (isPdf) {
-                    const pdfjsModule = await import("pdfjs-dist");
-                    const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.min.mjs");
+                    if (!user) {
+                      toast({ title: "Login required", description: "Please sign in to upload PDFs", variant: "destructive" });
+                      e.target.value = "";
+                      return;
+                    }
 
-                    pdfjsModule.GlobalWorkerOptions.workerSrc = pdfjsWorker.default || pdfjsWorker;
-
+                    setPdfLoading(true);
+                    // Convert PDF to base64 and send to server for extraction via Anthropic
                     const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await pdfjsModule.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
-                    const numPages = pdf.numPages;
-
-                    let fullText = "";
-                    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-                      const page = await pdf.getPage(pageNum);
-                      const content = await page.getTextContent();
-                      const strings = (content.items || []).map((item: any) => item.str || "");
-                      fullText += strings.join(" ") + "\n";
+                    const uint8 = new Uint8Array(arrayBuffer);
+                    let binary = "";
+                    for (let i = 0; i < uint8.length; i++) {
+                      binary += String.fromCharCode(uint8[i]);
                     }
+                    const pdfBase64 = btoa(binary);
 
-                    text = fullText.trim();
+                    const { data, error } = await supabase.functions.invoke('extract-pdf', {
+                      body: { pdfBase64 },
+                    });
 
-                    if (!text) {
-                      throw new Error("No extractable text found in PDF. It may be a scanned image.");
-                    }
+                    if (error) throw error;
+                    if (!data?.text) throw new Error("No text extracted from PDF");
+
+                    text = data.text;
                   } else {
                     text = await file.text();
                   }
@@ -159,15 +165,15 @@ export const ResumeScanner = () => {
                     title: "Resume loaded",
                     description: `Imported text from ${file.name}`,
                   });
-                } catch (err) {
+                } catch (err: any) {
                   console.error("File read / PDF parse error", err);
                   toast({
                     title: "Could not read resume",
-                    description:
-                      "We couldn't extract text from this file. If it's a scanned PDF, please export or save it as a .txt file and upload again.",
+                    description: err?.message || "Failed to extract text from this file. Please try again.",
                     variant: "destructive",
                   });
                 } finally {
+                  setPdfLoading(false);
                   e.target.value = "";
                 }
               }}
