@@ -19,6 +19,7 @@ export const ResumeScanner = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [result, setResult] = useState<ScanResult | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
 
