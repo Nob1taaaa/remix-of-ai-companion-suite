@@ -7,12 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-// Lazy import type for pdfjs to avoid hard module requirement in type system
-type PdfJsLib = typeof import("pdfjs-dist/types/src/pdf") & {
-  GlobalWorkerOptions: { workerSrc: string };
-  getDocument: (src: any) => { promise: Promise<any> };
-};
-
 interface ScanResult {
   score: number;
   feedback: string[];
