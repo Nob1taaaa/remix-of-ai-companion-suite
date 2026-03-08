@@ -6,9 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const MAX_MESSAGE_LENGTH = 10000;
-const MAX_MESSAGES = 50;
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+const MAX_MESSAGE_LENGTH = 10000; // 10K chars per message
+const MAX_MESSAGES = 50; // Max conversation history
 
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
   const authHeader = req.headers.get('Authorization');
@@ -49,6 +48,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Authenticate user
   const { user, error: authError } = await authenticateUser(req);
   if (authError) return authError;
 
@@ -64,6 +64,7 @@ serve(async (req) => {
       );
     }
 
+    // Input validation: limit number of messages
     if (messages.length > MAX_MESSAGES) {
       return new Response(
         JSON.stringify({ error: `Too many messages. Maximum ${MAX_MESSAGES} messages allowed.` }),
@@ -71,6 +72,7 @@ serve(async (req) => {
       );
     }
 
+    // Input validation: limit message content length
     for (const msg of messages) {
       if (typeof msg.content === 'string' && msg.content.length > MAX_MESSAGE_LENGTH) {
         return new Response(
@@ -80,30 +82,24 @@ serve(async (req) => {
       }
     }
 
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY is not configured');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    // Convert messages to Anthropic format (separate system from user/assistant)
-    const anthropicMessages = messages.map((msg: any) => ({
-      role: msg.role === 'system' ? 'user' : msg.role,
-      content: msg.content,
-    }));
-
-    const response = await fetch(ANTHROPIC_API_URL, {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2048,
-        system: 'You are a helpful AI assistant. Keep answers clear and concise.',
-        messages: anthropicMessages,
-        stream: true,
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: 'You are a helpful AI assistant. Keep answers clear and concise.' },
+          ...messages
+        ],
+        stream: true
       }),
     });
 
@@ -114,63 +110,18 @@ serve(async (req) => {
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: 'AI usage limit reached. Please add credits.' }),
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
       const errorText = await response.text();
-      console.error('Anthropic API error:', response.status, errorText);
+      console.error('AI Gateway error:', response.status, errorText);
       throw new Error('AI service error');
     }
 
-    // Transform Anthropic SSE stream to OpenAI-compatible SSE format
-    const { readable, writable } = new TransformStream();
-    const writer = writable.getWriter();
-    const encoder = new TextEncoder();
-    const decoder = new TextDecoder();
-
-    (async () => {
-      const reader = response.body!.getReader();
-      let buffer = '';
-
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-
-          let newlineIndex: number;
-          while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
-            const line = buffer.slice(0, newlineIndex).trim();
-            buffer = buffer.slice(newlineIndex + 1);
-
-            if (!line.startsWith('data: ')) continue;
-            const jsonStr = line.slice(6);
-            if (jsonStr === '[DONE]') continue;
-
-            try {
-              const event = JSON.parse(jsonStr);
-              
-              if (event.type === 'content_block_delta' && event.delta?.text) {
-                // Convert to OpenAI-compatible SSE format
-                const openAIChunk = {
-                  choices: [{ delta: { content: event.delta.text } }]
-                };
-                await writer.write(encoder.encode(`data: ${JSON.stringify(openAIChunk)}\n\n`));
-              } else if (event.type === 'message_stop') {
-                await writer.write(encoder.encode('data: [DONE]\n\n'));
-              }
-            } catch {
-              // Skip malformed JSON
-            }
-          }
-        }
-        // Ensure we send DONE
-        await writer.write(encoder.encode('data: [DONE]\n\n'));
-      } catch (e) {
-        console.error('Stream transform error:', e);
-      } finally {
-        await writer.close();
-      }
-    })();
-
-    return new Response(readable, {
+    return new Response(response.body, {
       headers: { ...corsHeaders, 'Content-Type': 'text/event-stream' }
     });
 
