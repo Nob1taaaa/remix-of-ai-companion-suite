@@ -128,13 +128,13 @@ export const ResumeScanner = () => {
                   let text = "";
 
                   if (isPdf) {
-                    const pdfjsModule = (await import("pdfjs-dist")) as unknown as PdfJsLib;
+                    const pdfjsModule = await import("pdfjs-dist");
+                    const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.min.mjs");
 
-                    pdfjsModule.GlobalWorkerOptions.workerSrc =
-                      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.449/pdf.worker.min.mjs";
+                    pdfjsModule.GlobalWorkerOptions.workerSrc = pdfjsWorker.default || pdfjsWorker;
 
                     const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await pdfjsModule.getDocument({ data: arrayBuffer }).promise;
+                    const pdf = await pdfjsModule.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
                     const numPages = pdf.numPages;
 
                     let fullText = "";
