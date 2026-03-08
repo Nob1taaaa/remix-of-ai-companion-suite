@@ -123,28 +123,30 @@ export const ResumeScanner = () => {
                   let text = "";
 
                   if (isPdf) {
-                    const pdfjsModule = await import("pdfjs-dist");
-                    const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.min.mjs");
+                    if (!user) {
+                      toast({ title: "Login required", description: "Please sign in to upload PDFs", variant: "destructive" });
+                      e.target.value = "";
+                      return;
+                    }
 
-                    pdfjsModule.GlobalWorkerOptions.workerSrc = pdfjsWorker.default || pdfjsWorker;
-
+                    setPdfLoading(true);
+                    // Convert PDF to base64 and send to server for extraction via Anthropic
                     const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await pdfjsModule.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
-                    const numPages = pdf.numPages;
-
-                    let fullText = "";
-                    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-                      const page = await pdf.getPage(pageNum);
-                      const content = await page.getTextContent();
-                      const strings = (content.items || []).map((item: any) => item.str || "");
-                      fullText += strings.join(" ") + "\n";
+                    const uint8 = new Uint8Array(arrayBuffer);
+                    let binary = "";
+                    for (let i = 0; i < uint8.length; i++) {
+                      binary += String.fromCharCode(uint8[i]);
                     }
+                    const pdfBase64 = btoa(binary);
 
-                    text = fullText.trim();
+                    const { data, error } = await supabase.functions.invoke('extract-pdf', {
+                      body: { pdfBase64 },
+                    });
 
-                    if (!text) {
-                      throw new Error("No extractable text found in PDF. It may be a scanned image.");
-                    }
+                    if (error) throw error;
+                    if (!data?.text) throw new Error("No text extracted from PDF");
+
+                    text = data.text;
                   } else {
                     text = await file.text();
                   }
@@ -154,15 +156,15 @@ export const ResumeScanner = () => {
                     title: "Resume loaded",
                     description: `Imported text from ${file.name}`,
                   });
-                } catch (err) {
+                } catch (err: any) {
                   console.error("File read / PDF parse error", err);
                   toast({
                     title: "Could not read resume",
-                    description:
-                      "We couldn't extract text from this file. If it's a scanned PDF, please export or save it as a .txt file and upload again.",
+                    description: err?.message || "Failed to extract text from this file. Please try again.",
                     variant: "destructive",
                   });
                 } finally {
+                  setPdfLoading(false);
                   e.target.value = "";
                 }
               }}
