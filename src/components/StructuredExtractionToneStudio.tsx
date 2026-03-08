@@ -17,6 +17,7 @@ export const StructuredExtractionToneStudio = () => {
   const [rawText, setRawText] = useState("");
   const [result, setResult] = useState<StructuredResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const handleRun = async () => {
     if (!rawText.trim()) {
