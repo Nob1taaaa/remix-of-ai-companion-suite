@@ -131,7 +131,7 @@ export const ResumeScanner = () => {
                     const pdfjsModule = (await import("pdfjs-dist")) as unknown as PdfJsLib;
 
                     pdfjsModule.GlobalWorkerOptions.workerSrc =
-                      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js";
+                      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.449/pdf.worker.min.mjs";
 
                     const arrayBuffer = await file.arrayBuffer();
                     const pdf = await pdfjsModule.getDocument({ data: arrayBuffer }).promise;
