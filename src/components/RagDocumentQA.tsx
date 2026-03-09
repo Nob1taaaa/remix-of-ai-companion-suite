@@ -36,7 +36,7 @@ export const RagDocumentQA = () => {
 
     try {
       if (isPdf) {
-        const pdfjsModule = (await import("pdfjs-dist")) as unknown as PdfJsLib;
+        const pdfjsModule = (await import(/* @vite-ignore */ "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs")) as unknown as PdfJsLib;
         pdfjsModule.GlobalWorkerOptions.workerSrc =
           "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js";
 
