@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { FileText, FileImage, HelpCircle, Loader2, Quote } from "lucide-react";
 
 // Lightweight type declaration to keep pdfjs as an optional runtime dependency
-type PdfJsLib = typeof import("pdfjs-dist/types/src/pdf") & {
+type PdfJsLib = {
   GlobalWorkerOptions: { workerSrc: string };
   getDocument: (src: any) => { promise: Promise<any> };
 };
@@ -36,7 +36,8 @@ export const RagDocumentQA = () => {
 
     try {
       if (isPdf) {
-        const pdfjsModule = (await import("pdfjs-dist")) as unknown as PdfJsLib;
+        // @ts-ignore - dynamic CDN import
+        const pdfjsModule = (await import(/* @vite-ignore */ "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs")) as unknown as PdfJsLib;
         pdfjsModule.GlobalWorkerOptions.workerSrc =
           "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js";
 
