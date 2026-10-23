@@ -1,9 +1,8 @@
 import { Suspense, lazy } from "react";
 import { ArrowLeft, Bot, Radio } from "lucide-react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/hooks/useAuth";
 
 const MultiAgentSystemLazy = lazy(() =>
   import("@/components/MultiAgentSystem").then((m) => ({ default: m.MultiAgentSystem }))
@@ -14,9 +13,6 @@ const StreamingAssistantLazy = lazy(() =>
 );
 
 const Agents = () => {
-  const { user, loading } = useAuth();
-  if (!loading && !user) return <Navigate to="/auth" replace />;
-
   return (
     <main className="min-h-screen">
       <div className="relative overflow-hidden">
