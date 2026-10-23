@@ -2,11 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Send, Loader2, Lock } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -19,7 +17,6 @@ export const StreamingAssistant = () => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user } = useAuth();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,27 +29,12 @@ export const StreamingAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
-    if (!user) {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to use the chat assistant",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const userMessage: Message = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput("");
     setLoading(true);
 
     try {
-      // Get the current user's session token
+      // Signed-in users send their token; signed-out visitors proceed anonymously
       const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.access_token) {
-        throw new Error('No active session');
-      }
+      const token = session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stream-chat`,

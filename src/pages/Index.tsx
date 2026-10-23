@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ResumeScanner } from "@/components/ResumeScanner";
 import { AboutLab } from "@/components/AboutLab";
-import { useAuth } from "@/hooks/useAuth";
 const projects = [{
   id: 1,
   title: "NLP Foundations Lab",
@@ -30,9 +29,6 @@ const projects = [{
   path: "/agents"
 }];
 const Index = () => {
-  const {
-    user
-  } = useAuth();
   return <main className="min-h-screen">
       <div className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 opacity-60 mix-blend-screen">
@@ -61,10 +57,10 @@ const Index = () => {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Link to={user ? "/my-lab" : "/auth"}>
+                <Link to="/my-lab">
                   <Button variant="hero" className="hover-scale">
                     <Bot className="h-4 w-4" />
-                    {user ? "Go to My Lab" : "Sign in to start"}
+                    Go to My Lab
                   </Button>
                 </Link>
                 <button className="story-link text-sm font-medium text-muted-foreground">
