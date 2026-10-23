@@ -11,26 +11,7 @@ export const PredictiveKeyboard = () => {
   const [predictions, setPredictions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
-
   const handlePredict = async () => {
-    if (authLoading) {
-      toast({
-        title: "Loading session",
-        description: "Please wait a moment and try again.",
-      });
-      return;
-    }
-
-    if (!user) {
-      toast({
-        title: "Login required",
-        description: "Please sign in to use Predictive Keyboard.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (!text.trim()) {
       toast({
         title: "Enter some text",

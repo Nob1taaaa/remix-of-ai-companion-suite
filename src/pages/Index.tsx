@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ResumeScanner } from "@/components/ResumeScanner";
 import { AboutLab } from "@/components/AboutLab";
-import { useAuth } from "@/hooks/useAuth";
 const projects = [{
   id: 1,
   title: "NLP Foundations Lab",
