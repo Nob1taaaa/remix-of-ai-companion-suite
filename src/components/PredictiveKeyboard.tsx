@@ -4,7 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Loader2, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 
 export const PredictiveKeyboard = () => {
   const [text, setText] = useState("");
@@ -60,7 +59,7 @@ export const PredictiveKeyboard = () => {
 
       <Button
         onClick={handlePredict}
-        disabled={loading || authLoading || !user}
+        disabled={loading}
         size="lg"
         className="relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
       >
