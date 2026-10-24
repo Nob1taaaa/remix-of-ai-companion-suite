@@ -29,7 +29,6 @@ async function authenticateUser(req: Request): Promise<{ user: any; error: Respo
   }
 
   return { user, error: null };
-};
 }
 
 serve(async (req) => {
