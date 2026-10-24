@@ -1,5 +1,6 @@
 # Roadmap
 
-- [in-progress] Make login optional: remove sign-in gates from labs/tools, keep My Lab history for signed-in users
-- [in-progress] Make edge functions accept anonymous requests (fix uploads/agents failing when signed out)
-- [todo] Verify end-to-end in preview: resume scan, classify, agents, chat, My Lab
+- [x] Make login optional: labs and tools open without sign-in; My Lab shows a sign-in prompt for saving history
+- [x] Make edge functions accept anonymous requests (uploads/agents failing when signed out — fixed)
+- [x] Rotate Lovable AI key (gateway reported key not registered; tools errored with "AI service error")
+- [x] Verified signed-out: /my-lab prompt page, resume scan, classify, predictive keyboard all work
