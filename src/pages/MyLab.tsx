@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
@@ -80,7 +80,29 @@ const MyLab = () => {
   );
 
   if (!loading && !user) {
-    return <Navigate to="/auth" replace />;
+    return (
+      <main className="min-h-screen flex items-center justify-center px-4">
+        <Card className="w-full max-w-md border bg-card/80 backdrop-blur-md p-8 text-center space-y-4 shadow-xl">
+          <h1 className="text-2xl font-semibold">My Lab Dashboard</h1>
+          <p className="text-sm text-muted-foreground">
+            Every lab tool works without an account. Sign in only if you want to save and revisit your scans, classifications, and agent runs.
+          </p>
+          <div className="flex justify-center gap-3">
+            <Link to="/">
+              <Button variant="outline" size="sm">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Lab
+              </Button>
+            </Link>
+            <Link to="/auth">
+              <Button size="sm">
+                Sign in
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </main>
+    );
   }
 
   return (
