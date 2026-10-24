@@ -29,6 +29,9 @@ export const StreamingAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
+    const userMessage: Message = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
     setLoading(true);
 
     try {
