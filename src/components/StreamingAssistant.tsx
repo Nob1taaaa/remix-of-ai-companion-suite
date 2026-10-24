@@ -29,6 +29,9 @@ export const StreamingAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
+    const userMessage: Message = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
     setLoading(true);
 
     try {
@@ -42,7 +45,7 @@ export const StreamingAssistant = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ messages: [...messages, userMessage] })
         }
@@ -111,26 +114,6 @@ export const StreamingAssistant = () => {
       setMessages(prev => prev.slice(0, -1)); // Remove empty assistant message
     }
   };
-
-  // Show login prompt if user is not authenticated
-  if (!user) {
-    return (
-      <div className="flex h-[500px] flex-col items-center justify-center space-y-4">
-        <Card className="flex flex-col items-center justify-center p-8 text-center border-2 border-primary/20">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
-            <Lock className="h-8 w-8 text-primary" />
-          </div>
-          <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Please sign in to use the streaming chat assistant
-          </p>
-          <Button asChild>
-            <Link to="/auth">Sign In</Link>
-          </Button>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="flex h-[500px] flex-col space-y-4">
