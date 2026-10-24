@@ -10,15 +10,10 @@ const MAX_DOCUMENT_LENGTH = 100000; // 100K chars for documents
 const MAX_QUESTION_LENGTH = 2000; // 2K chars for questions
 
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
+  // Auth is optional: signed-out visitors proceed anonymously.
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
-    return {
-      user: null,
-      error: new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    };
+    return { user: null, error: null };
   }
 
   const supabaseAdmin = createClient(
@@ -28,19 +23,13 @@ async function authenticateUser(req: Request): Promise<{ user: any; error: Respo
 
   const token = authHeader.replace('Bearer ', '');
   const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-  
+
   if (error || !user) {
-    console.error('Auth error:', error?.message);
-    return {
-      user: null,
-      error: new Response(
-        JSON.stringify({ error: 'Invalid or expired token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    };
+    return { user: null, error: null };
   }
 
   return { user, error: null };
+};
 }
 
 serve(async (req) => {
@@ -52,7 +41,7 @@ serve(async (req) => {
   const { user, error: authError } = await authenticateUser(req);
   if (authError) return authError;
 
-  console.log('Authenticated user:', user.id);
+  console.log('Authenticated user:', user?.id ?? 'anonymous');
 
   try {
     const { documentText, image, question } = await req.json();

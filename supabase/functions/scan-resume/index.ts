@@ -10,40 +10,26 @@ const MAX_RESUME_LENGTH = 50000; // 50K chars for resume
 const MAX_JOB_DESCRIPTION_LENGTH = 20000; // 20K chars for job description
 
 async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
+  // Auth is optional: signed-out visitors proceed anonymously.
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
-    return {
-      user: null,
-      error: new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    };
+    return { user: null, error: null };
   }
 
-  // Use service role key for server-side validation of user tokens
   const supabaseAdmin = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
   );
 
-  // Extract the token from the header
   const token = authHeader.replace('Bearer ', '');
-  
   const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-  
+
   if (error || !user) {
-    console.error('Auth error:', error?.message);
-    return {
-      user: null,
-      error: new Response(
-        JSON.stringify({ error: 'Invalid or expired token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    };
+    return { user: null, error: null };
   }
 
   return { user, error: null };
+};
 }
 
 serve(async (req) => {
@@ -55,7 +41,7 @@ serve(async (req) => {
   const { user, error: authError } = await authenticateUser(req);
   if (authError) return authError;
 
-  console.log('Authenticated user:', user.id);
+  console.log('Authenticated user:', user?.id ?? 'anonymous');
 
   try {
     const { resumeText, jobDescription } = await req.json();
