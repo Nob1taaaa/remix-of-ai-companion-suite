@@ -1,3 +1,4 @@
+import { checkRateLimit } from "../_shared/rateLimit.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
@@ -8,7 +9,7 @@ const corsHeaders = {
 
 const MAX_TEXT_LENGTH = 5000; // 5K chars for predictive keyboard
 
-async function authenticateUser(req: Request): Promise<{ user: any; error: Response | null }> {
+async function authenticateUser(req: Request): Promise<{ user: { id: string; email?: string } | null; error: Response | null }> {
   // Auth is optional: signed-out visitors proceed anonymously.
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
@@ -34,6 +35,8 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
+  const limited = await checkRateLimit(req, 'predictive-keyboard');
+  if (limited) return limited;
 
   // Authenticate user
   const { user, error: authError } = await authenticateUser(req);

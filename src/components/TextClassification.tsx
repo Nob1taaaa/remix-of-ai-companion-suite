@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -54,11 +55,11 @@ export const TextClassification = () => {
           user_id: user.id,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Classification error:', error);
       toast({
         title: "Classification failed",
-        description: error.message || "Failed to classify text",
+        description: errorMessage(error) || "Failed to classify text",
         variant: "destructive",
       });
     } finally {

@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { FileText, FileImage, HelpCircle, Loader2, Quote } from "lucide-react";
 // Lightweight type declaration to keep pdfjs as an optional runtime dependency
 type PdfJsLib = {
   GlobalWorkerOptions: { workerSrc: string };
-  getDocument: (src: any) => { promise: Promise<any> };
+  getDocument: (src: { data: ArrayBuffer }) => { promise: Promise<{ numPages: number; getPage: (n: number) => Promise<{ getTextContent: () => Promise<{ items: { str?: string }[] }> }> }> };
 };
 
 interface RagAnswer {
@@ -36,7 +37,7 @@ export const RagDocumentQA = () => {
 
     try {
       if (isPdf) {
-        // @ts-ignore - dynamic CDN import
+        // @ts-expect-error - dynamic CDN import
         const pdfjsModule = (await import(/* @vite-ignore */ "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs")) as unknown as PdfJsLib;
         pdfjsModule.GlobalWorkerOptions.workerSrc =
           "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js";
@@ -49,7 +50,7 @@ export const RagDocumentQA = () => {
         for (let pageNum = 1; pageNum <= numPages; pageNum++) {
           const page = await pdf.getPage(pageNum);
           const content = await page.getTextContent();
-          const strings = (content.items || []).map((item: any) => item.str || "");
+          const strings = (content.items || []).map((item: { str?: string }) => item.str || "");
           fullText += strings.join(" ") + "\n";
         }
 
@@ -148,9 +149,9 @@ export const RagDocumentQA = () => {
         title: "Answer ready",
         description: "Grounded response generated from your document.",
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("RAG QA error", err);
-      const message = err?.message || "Failed to run document Q&A. Please try again.";
+      const message = (err instanceof Error ? err.message : undefined) || "Failed to run document Q&A. Please try again.";
       toast({
         title: "Q&A failed",
         description: message,

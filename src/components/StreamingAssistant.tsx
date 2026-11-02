@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,11 +104,11 @@ export const StreamingAssistant = () => {
       }
 
       setLoading(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Streaming error:', error);
       toast({
         title: "Chat error",
-        description: error.message || "Failed to send message",
+        description: errorMessage(error) || "Failed to send message",
         variant: "destructive",
       });
       setLoading(false);

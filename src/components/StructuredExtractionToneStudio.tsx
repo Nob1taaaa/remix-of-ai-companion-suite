@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,11 +48,11 @@ export const StructuredExtractionToneStudio = () => {
         title: "Transformation complete",
         description: "JSON and TOON views generated from your text.",
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Structured studio error", err);
       toast({
         title: "Could not transform text",
-        description: err?.message || "Please try again.",
+        description: (err instanceof Error ? err.message : undefined) || "Please try again.",
         variant: "destructive",
       });
     } finally {

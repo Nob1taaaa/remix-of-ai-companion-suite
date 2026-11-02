@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -61,11 +62,11 @@ export const MultiAgentSystem = () => {
           user_id: user.id,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Multi-agent error:', error);
       toast({
         title: "Agent system failed",
-        description: error.message || "Failed to run agents",
+        description: errorMessage(error) || "Failed to run agents",
         variant: "destructive",
       });
     } finally {

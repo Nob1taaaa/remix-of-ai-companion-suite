@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,11 +29,11 @@ export const PredictiveKeyboard = () => {
 
       if (error) throw error;
       setPredictions(data.predictions);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Prediction error:', error);
       toast({
         title: "Prediction failed",
-        description: error.message || "Failed to predict next words",
+        description: errorMessage(error) || "Failed to predict next words",
         variant: "destructive",
       });
     } finally {

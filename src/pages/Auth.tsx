@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -64,11 +65,11 @@ const AuthPage = () => {
           description: "We sent you a confirmation link to complete signup.",
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Auth error", err);
       toast({
         title: "Authentication failed",
-        description: err.message ?? "Something went wrong. Please try again.",
+        description: errorMessage(err) ?? "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {

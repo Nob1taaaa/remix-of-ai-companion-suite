@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -61,11 +62,11 @@ export const ResumeScanner = () => {
           user_id: user.id,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Scan error:', error);
       toast({
         title: "Scan failed",
-        description: error.message || "Failed to analyze resume. Please try again.",
+        description: errorMessage(error) || "Failed to analyze resume. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -156,11 +157,11 @@ export const ResumeScanner = () => {
                     title: "Resume loaded",
                     description: `Imported text from ${file.name}`,
                   });
-                } catch (err: any) {
+                } catch (err: unknown) {
                   console.error("File read / PDF parse error", err);
                   toast({
                     title: "Could not read resume",
-                    description: err?.message || "Failed to extract text from this file. Please try again.",
+                    description: (err instanceof Error ? err.message : undefined) || "Failed to extract text from this file. Please try again.",
                     variant: "destructive",
                   });
                 } finally {
